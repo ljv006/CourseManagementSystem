@@ -125,6 +125,24 @@ public class ServerThread implements Runnable{
 						
 					}
 					break;
+				case "GETCOURSEINFORMATION":
+				{
+					PrintStream ps = new PrintStream(s.getOutputStream());
+					ps.println(Command.getCourseInformationSuccess);
+					String Cname = readFromClient();
+					try {
+						String CID = CourseDatabase.getCID(Cname);
+						List<CourseInformation> courseInfoList = CourseInformationDatabase.getAllCourseInformationList(CID);
+						CourseInformationList cl = new CourseInformationList(courseInfoList);
+						os.writeObject(cl);
+						os.flush();
+					}
+					catch (IOException e) {
+						e.printStackTrace();
+					} 
+					
+				}
+				break;
 				}
 			}
 			System.out.println("end");

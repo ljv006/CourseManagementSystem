@@ -11,4 +11,8 @@ public class Command {
 	public static String getUserCourseListSuccess = "GETUSERCOURSELISTSUCCESS";
 	public static String registerCourse = "REGISTERCOURSE";
 	public static String registerCourseSuccess = "REGISTERCOURSESUCCESS";
+	public static String getCourseInformation = "GETCOURSEINFORMATION";
+	public static String getCourseInformationSuccess = "GETCOURSEINFORMATIONSUCCESS";
+	public static String setCourseInformation = "SETCOURSEINFORMATION";
+	public static String setCourseInformationSuccess = "SETCOURSEINFORMATIONSUCCESS";
 }

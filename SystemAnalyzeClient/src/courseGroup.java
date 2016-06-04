@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,7 +17,7 @@ import javax.swing.border.EmptyBorder;
 public class courseGroup extends JFrame {
 
 	private JPanel contentPane;
-
+	public static String courseName;
 	/**
 	 * Launch the application.
 	 */
@@ -24,18 +25,19 @@ public class courseGroup extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					courseGroup frame = new courseGroup();
+					courseGroup frame = new courseGroup(courseName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
-
+	
 	/**
 	 * Create the frame.
 	 */
-	public courseGroup() {
+	public courseGroup(String _courseName) {
+		courseName = _courseName;
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
 		f.getContentPane().setLayout(null);
@@ -52,7 +54,18 @@ public class courseGroup extends JFrame {
 		JButton groupInformationButton = new JButton("\u7FA4\u7EC4\u4FE1\u606F");
 		groupInformationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				groupInformation gi = new groupInformation();
+				try {
+					groupInformation gi = new groupInformation(courseName);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		groupInformationButton.setBounds(82, 90, 102, 41);
@@ -88,6 +101,11 @@ public class courseGroup extends JFrame {
 		});
 		goBackButton.setBounds(316, 47, 102, 41);
 		f.getContentPane().add(goBackButton);
+		
+		JLabel courseNameLabel = new JLabel(courseName);
+		courseNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		courseNameLabel.setBounds(143, 10, 145, 27);
+		f.getContentPane().add(courseNameLabel);
 		//获取课程列表
 		f.setVisible(true);
 	}

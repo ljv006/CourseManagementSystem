@@ -53,10 +53,21 @@ public class ClientThread implements Runnable{
 					}
 					break;
 				case "REGISTERCOURSESUCCESS":
-				{
-					registCourse.registerCourseStatus = "REGISTERCOURSESUCCESS";
-				}
-				break;
+					{
+						registCourse.registerCourseStatus = "REGISTERCOURSESUCCESS";
+					}
+					break;
+				case "GETCOURSEINFORMATIONSUCCESS":
+					{
+						CourseInformationList cl = new CourseInformationList();
+						//”–Œ Ã‚
+						System.out.println("the size of ci:" + cl.getSize());
+						while ((cl = (CourseInformationList)is.readObject()) != null) {
+							groupInformation.cl = cl;
+						}
+					}
+					break;
+			
 				}
 			}
 		}

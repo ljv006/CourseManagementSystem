@@ -91,6 +91,15 @@ public class mainWindow extends JFrame {
 		f.getContentPane().add(registerCourseButton);
 		
 		JButton enterGroupButton = new JButton("\u8FDB\u5165\u7FA4\u7EC4");
+		enterGroupButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String courseName;
+				if ((courseName = (String) courselist.getSelectedValue()) != null) {
+						courseGroup cg = new courseGroup(courseName);
+						
+				}
+			}
+		});
 		enterGroupButton.setBounds(200, 108, 118, 38);
 		f.getContentPane().add(enterGroupButton);
 		
@@ -98,9 +107,7 @@ public class mainWindow extends JFrame {
 		refreshButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				f.getContentPane().remove(courselist);
-				System.out.println("size of list1:" + cl.getSize());
 				cl.CourseList.clear();
-				System.out.println("size of list2:" + cl.getSize());
 				try {
 					Client.getUserCourseList(Client.usr);
 				} catch (IOException e1) {
