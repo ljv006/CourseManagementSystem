@@ -26,6 +26,36 @@ public class StudentDatabase {
 		fileReader.close();
 		return false;
 	}
+	public static boolean isfind(String SID) throws IOException {
+		FileReader fileReader = new FileReader(fileName);
+		@SuppressWarnings("resource")
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String out = "";
+		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
+			String studentInfo[] = out.split(" ");
+			if (SID.equals(studentInfo[ID])) {
+				return true;
+			}
+		}
+		bufferedReader.close();
+		fileReader.close();
+		return false;
+	}
+	public static String getSname(String SID) throws IOException {
+		FileReader fileReader = new FileReader(fileName);
+		@SuppressWarnings("resource")
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String out = "";
+		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
+			String studentInfo[] = out.split(" ");
+			if (studentInfo[ID].equals(SID)) {
+				return studentInfo[name];
+			}
+		}
+		bufferedReader.close();
+		fileReader.close();
+		return null;
+	}
 	public static boolean insert(User user) throws IOException {
 		if (isfind(user)) {
 			return false;

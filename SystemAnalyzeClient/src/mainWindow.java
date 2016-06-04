@@ -72,7 +72,7 @@ public class mainWindow extends JFrame {
 			str[count++] = c.name;
 		}
 		JList courselist = new JList(str);
-		courselist.setBounds(10, 37, 197, 215);
+		courselist.setBounds(10, 37, 180, 215);
 		f.getContentPane().add(courselist);
 		JButton registerCourseButton = new JButton("\u6CE8\u518C/\u521B\u5EFA\u8BFE\u7A0B");
 		registerCourseButton.addActionListener(new ActionListener() {
@@ -97,7 +97,10 @@ public class mainWindow extends JFrame {
 		JButton refreshButton = new JButton("\u5237\u65B0\u5217\u8868");
 		refreshButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				f.getContentPane().remove(courselist);
+				System.out.println("size of list1:" + cl.getSize());
 				cl.CourseList.clear();
+				System.out.println("size of list2:" + cl.getSize());
 				try {
 					Client.getUserCourseList(Client.usr);
 				} catch (IOException e1) {

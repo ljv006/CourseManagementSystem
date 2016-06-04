@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -20,6 +22,7 @@ public class registCourse extends JFrame {
 
 	private JPanel contentPane;
 	public static CourseList cl = new CourseList();
+	public static String registerCourseStatus;
 	/**
 	 * Launch the application.
 	 */
@@ -61,7 +64,7 @@ public class registCourse extends JFrame {
 				}
 			}
 		});
-		gobackButton.setBounds(217,123,101,38);
+		gobackButton.setBounds(217,123,102,41);
 		f.getContentPane().add(gobackButton);
 		
 		JLabel lblNewLabel = new JLabel("\u6240\u6709\u8BFE\u7A0B\u5217\u8868");
@@ -80,6 +83,38 @@ public class registCourse extends JFrame {
 		f.getContentPane().add(courselist);
 		
 		JButton registerButton = new JButton("\u6CE8\u518C");
+		registerButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				List<String> courseName;
+				System.out.println("herehere");
+				if ((courseName = courselist.getSelectedValuesList()) != null) {
+						try {
+							Client.registerCourse(courseName);
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+				}
+				System.out.println(courseName.size());
+				while (true) {
+					System.out.println("registerCourseStatus");
+					if (registerCourseStatus != null && registerCourseStatus.equals("REGISTERCOURSESUCCESS")) {
+						JOptionPane.showMessageDialog(getContentPane(),
+								"注册课程成功!", "注册课程成功", JOptionPane.INFORMATION_MESSAGE);
+						close();
+						try {
+							mainWindow mw = new mainWindow();
+						} catch (IOException | InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						break;
+					}
+					else if (registerCourseStatus != null && registerCourseStatus.equals("REGISTERCOURSEFAIL")) {
+						
+					}
+				}
+			}
+		});
 		registerButton.setBounds(216, 82, 102, 41);
 		f.getContentPane().add(registerButton);
 		

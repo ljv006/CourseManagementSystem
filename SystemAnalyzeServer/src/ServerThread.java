@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +21,7 @@ public class ServerThread implements Runnable{
 		br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 		os = new ObjectOutputStream(s2.getOutputStream());
 	}
+	@SuppressWarnings("unchecked")
 	public void run() {
 		System.out.println("HH");
 		try {
@@ -100,11 +102,37 @@ public class ServerThread implements Runnable{
 						} 
 					}
 					break;
+				case "REGISTERCOURSE":
+					{
+						PrintStream ps = new PrintStream(s.getOutputStream());
+						ps.println(Command.registerCourseSuccess);
+						String SID = readFromClient();
+						is = new ObjectInputStream(s2.getInputStream());
+						List<String> courseName = new ArrayList<String>();
+						while ((courseName = (List<String>) is.readObject()) != null) {
+							try {
+								for (String cname:courseName) {
+									String CID = CourseDatabase.getCID(cname);
+									if (CID != null) {
+										StudentCourseDatabase.insert(SID, CID);
+									}
+								}
+							}
+							catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+						
+					}
+					break;
 				}
 			}
 			System.out.println("end");
 		}
 		catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

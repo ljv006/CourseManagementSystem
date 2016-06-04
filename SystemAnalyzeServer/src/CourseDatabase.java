@@ -31,6 +31,51 @@ public class CourseDatabase {
 		fileReader.close();
 		return false;
 	}
+	public static boolean isfind(String CID) throws IOException {
+		FileReader fileReader = new FileReader(fileName);
+		@SuppressWarnings("resource")
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String out = "";
+		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
+			String courseInfo[] = out.split(" ");
+			if (CID.equals(courseInfo[ID])) {
+				return true;
+			}
+		}
+		bufferedReader.close();
+		fileReader.close();
+		return false;
+	}
+	public static String getCID(String Cname) throws IOException {
+		FileReader fileReader = new FileReader(fileName);
+		@SuppressWarnings("resource")
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String out = "";
+		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
+			String courseInfo[] = out.split(" ");
+			if (courseInfo[name].equals(Cname)) {
+				return courseInfo[ID];
+			}
+		}
+		bufferedReader.close();
+		fileReader.close();
+		return null;
+	}
+	public static String getCname(String CID) throws IOException {
+		FileReader fileReader = new FileReader(fileName);
+		@SuppressWarnings("resource")
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String out = "";
+		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
+			String courseInfo[] = out.split(" ");
+			if (courseInfo[ID].equals(CID)) {
+				return courseInfo[name];
+			}
+		}
+		bufferedReader.close();
+		fileReader.close();
+		return null;
+	}
 	public static List<Course> getAllCourseList() throws IOException {
 		FileReader fileReader = new FileReader(fileName);
 		@SuppressWarnings("resource")

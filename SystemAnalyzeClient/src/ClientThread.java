@@ -52,6 +52,11 @@ public class ClientThread implements Runnable{
 						}
 					}
 					break;
+				case "REGISTERCOURSESUCCESS":
+				{
+					registCourse.registerCourseStatus = "REGISTERCOURSESUCCESS";
+				}
+				break;
 				}
 			}
 		}

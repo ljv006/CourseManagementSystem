@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,7 +73,16 @@ public class Client{
 		ps.println(usr.ID);
         new Thread(new ClientThread(socket, socket2)).start();
 	}
-	public static void registerCourse() {
-		
+	public static void registerCourse(List<String> courseName) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.registerCourse);
+		ps.println(Command.registerCourse);
+		ps.println(Client.usr.ID);
+		os = new ObjectOutputStream(socket2.getOutputStream());
+		os.writeObject(courseName); 
+        os.flush();
+        new Thread(new ClientThread(socket, socket2)).start();
 	}
 }
