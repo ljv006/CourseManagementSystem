@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
@@ -126,23 +130,125 @@ public class ServerThread implements Runnable{
 					}
 					break;
 				case "GETCOURSEINFORMATION":
-				{
-					PrintStream ps = new PrintStream(s.getOutputStream());
-					ps.println(Command.getCourseInformationSuccess);
-					String Cname = readFromClient();
-					try {
-						String CID = CourseDatabase.getCID(Cname);
-						List<CourseInformation> courseInfoList = CourseInformationDatabase.getAllCourseInformationList(CID);
-						CourseInformationList cl = new CourseInformationList(courseInfoList);
-						os.writeObject(cl);
-						os.flush();
+					{
+						PrintStream ps = new PrintStream(s.getOutputStream());
+						ps.println(Command.getCourseInformationSuccess);
+						String Cname = readFromClient();
+						try {
+							String CID = CourseDatabase.getCID(Cname);
+							List<CourseInformation> courseInfoList = CourseInformationDatabase.getAllCourseInformationList(CID);
+							CourseInformationList cl = new CourseInformationList(courseInfoList);
+							os.writeObject(cl);
+							os.flush();
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+						} 
+						
 					}
-					catch (IOException e) {
-						e.printStackTrace();
-					} 
-					
-				}
-				break;
+					break;
+				case "UPLOADHOMEWORK":
+					{
+						PrintStream ps = new PrintStream(s.getOutputStream());
+						ps.println(Command.uploadHomeworkSuccess);
+						byte[] inputByte = null;  
+				        int length = 0;  
+				        DataInputStream dis = null;  
+				        FileOutputStream fos = null;  
+				        String fileName = readFromClient();
+				        //服务器存储文件路径
+				        String filePath = "D:/Homework/" + fileName;
+				        try {  
+				            try {  
+				                dis = new DataInputStream(s2.getInputStream());  
+				                File f = new File("D:/Homework");  
+				                if(!f.exists()){  
+				                    f.mkdir();    
+				                }  
+				                /*   
+				                 * 文件存储位置   
+				                 */  
+				                fos = new FileOutputStream(new File(filePath));      
+				                inputByte = new byte[1024];     
+				                System.out.println("开始接收数据...");    
+				                while ((length = dis.read(inputByte, 0, inputByte.length)) > 0) {  
+				                    fos.write(inputByte, 0, length);  
+				                    fos.flush();      
+				                }  
+				                System.out.println("完成接收："+filePath);  
+				            } finally {  
+				                if (fos != null)  
+				                    fos.close();  
+				                if (dis != null)  
+				                    dis.close();  
+				            }  
+				        } catch (Exception e) {  
+				            e.printStackTrace();  
+				        }  
+						
+					}
+					break;
+				case "GETCOURSERESOURCE":
+					{
+						PrintStream ps = new PrintStream(s.getOutputStream());
+						ps.println(Command.getCourseResourceSuccess);
+						String Cname = readFromClient();
+						try {
+							String CID = CourseDatabase.getCID(Cname);
+							CourseResourceDatabase.renew(Cname);
+							List<CourseResource> courseResourceList = CourseResourceDatabase.getAllCourseResourceList(CID);
+							CourseResourceList cl = new CourseResourceList(courseResourceList);
+							os.writeObject(cl);
+							os.flush();
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+						} 
+						
+					}
+					break;
+				case "UPLOADCOURSERESOURCE":
+					{
+						PrintStream ps = new PrintStream(s.getOutputStream());
+						ps.println(Command.uploadCourseResourceSuccess);
+						byte[] inputByte = null;  
+				        int length = 0;  
+				        DataInputStream dis = null;  
+				        FileOutputStream fos = null;  
+				        String fileName = readFromClient();
+				        String courseName = readFromClient();
+				        //服务器存储文件路径
+				        String filePath = "D:/CourseResource/" + fileName;
+				        try {  
+				            try {  
+				                dis = new DataInputStream(s2.getInputStream());  
+				                File f = new File("D:/CourseResource");  
+				                if(!f.exists()){  
+				                    f.mkdir();    
+				                }  
+				                /*   
+				                 * 文件存储位置   
+				                 */  
+				                fos = new FileOutputStream(new File(filePath));      
+				                inputByte = new byte[1024];     
+				                System.out.println("开始接收数据...");    
+				                while ((length = dis.read(inputByte, 0, inputByte.length)) > 0) {  
+				                    fos.write(inputByte, 0, length);  
+				                    fos.flush();      
+				                }  
+				                System.out.println("完成接收："+filePath);
+				            } finally {  
+				                if (fos != null)  
+				                    fos.close();  
+				                if (dis != null)  
+				                    dis.close();  
+				            }  
+				        } catch (Exception e) {  
+				            e.printStackTrace();  
+				        }  
+						
+					}
+					break;
 				}
 			}
 			System.out.println("end");

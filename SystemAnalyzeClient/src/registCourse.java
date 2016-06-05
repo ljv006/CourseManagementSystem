@@ -132,14 +132,11 @@ public class registCourse extends JFrame {
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-				String[] str = new String[cl.getSize()];
-				int count = 0;
+				DefaultListModel model = new DefaultListModel();
 				for (Course c:cl.CourseList) {
-					str[count++] = c.name;
+					model.addElement(c.name);
 				}
-				JList courselist = new JList(str);
-				courselist.setBounds(10, 37, 180, 215);
-				f.getContentPane().add(registerButton);
+				courselist.setModel(model);
 			}
 		});
 		refreshButton.setBounds(217, 44, 101, 38);

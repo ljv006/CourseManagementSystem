@@ -11,8 +11,10 @@ public class ClientThread implements Runnable{
 	ObjectInputStream is = null;
 	public ClientThread(Socket s, Socket s2) throws IOException{
 		this.s = s;
-		br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-		is = new ObjectInputStream(s2.getInputStream());
+		if (!s.isClosed())
+			br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+		if (!s2.isClosed())
+			is = new ObjectInputStream(s2.getInputStream());
 	}
 	public void run() {
 		try {
@@ -61,13 +63,31 @@ public class ClientThread implements Runnable{
 					{
 						CourseInformationList cl = new CourseInformationList();
 						//有问题
-						System.out.println("the size of ci:" + cl.getSize());
+
 						while ((cl = (CourseInformationList)is.readObject()) != null) {
 							groupInformation.cl = cl;
 						}
 					}
 					break;
-			
+				case "UPLOADHOMEWORKSUCCESS":
+					{
+						uploadHomework.uploadHomeworkStatus = "UPLOADHOMEWORKSUCCESS";
+					}
+					break;
+				case "GETCOURSERESOURCESUCCESS":
+					{
+						CourseResourceList cl = new CourseResourceList();
+						//有问题
+						while ((cl = (CourseResourceList)is.readObject()) != null) {
+							uploaddownload.cl = cl;
+						}
+					}
+					break;
+				case "UPLOADCOURSERESOURCESUCCESS":
+					{
+						uploaddownload.uploadCourseResourceStatus = "UPLOADCOURSERESOURCESUCCESS";
+					}
+					break;
 				}
 			}
 		}

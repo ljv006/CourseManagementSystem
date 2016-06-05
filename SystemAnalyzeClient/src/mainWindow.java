@@ -4,7 +4,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.ListModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -106,7 +108,6 @@ public class mainWindow extends JFrame {
 		JButton refreshButton = new JButton("\u5237\u65B0\u5217\u8868");
 		refreshButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				f.getContentPane().remove(courselist);
 				cl.CourseList.clear();
 				try {
 					Client.getUserCourseList(Client.usr);
@@ -118,14 +119,11 @@ public class mainWindow extends JFrame {
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-				String[] str = new String[cl.getSize()];
-				int count = 0;
+				DefaultListModel model = new DefaultListModel();
 				for (Course c:cl.CourseList) {
-					str[count++] = c.name;
+					model.addElement(c.name);
 				}
-				JList courselist = new JList(str);
-				courselist.setBounds(10, 37, 197, 215);
-				f.getContentPane().add(courselist);
+				courselist.setModel(model);
 			}
 		});
 		refreshButton.setBounds(200, 34, 118, 38);

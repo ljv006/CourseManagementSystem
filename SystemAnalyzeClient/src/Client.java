@@ -3,6 +3,9 @@
  */
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,6 +14,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayDeque;
@@ -97,5 +101,102 @@ public class Client{
 		ps.println(Command.getCourseInformation);
 		ps.println(courseName);
         new Thread(new ClientThread(socket, socket2)).start();
+	}
+	public static void uploadHomework(File file) throws IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.uploadHomework);
+		ps.println(Command.uploadHomework);
+		ps.println(file.getName());
+		System.out.println(file.getName());
+		int length = 0;  
+        double sumL = 0 ;  
+        byte[] sendBytes = null;  
+        DataOutputStream dos = null;  
+        FileInputStream fis = null;  
+        boolean bool = false;  
+        try {  
+            long l = file.length();
+            dos = new DataOutputStream(socket2.getOutputStream());  
+            fis = new FileInputStream(file);        
+            sendBytes = new byte[1024];    
+            while ((length = fis.read(sendBytes, 0, sendBytes.length)) > 0) {  
+                sumL += length;    
+                System.out.println("已传输："+((sumL/l)*100)+"%");  
+                dos.write(sendBytes, 0, length);  
+                dos.flush();  
+            }   
+            //虽然数据类型不同，但JAVA会自动转换成相同数据类型后在做比较  
+            if(sumL==l){  
+                bool = true;  
+            }  
+        }catch (Exception e) {  
+            System.out.println("客户端文件传输异常");  
+            bool = false;  
+            e.printStackTrace();    
+        } finally{    
+            if (dos != null)  
+                dos.close();  
+            if (fis != null)  
+                fis.close();         
+        }  
+        System.out.println(bool?"成功":"失败");
+        new Thread(new ClientThread(socket, socket2)).start();
+	}
+	public static void getCourseResource(String courseName) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.getCourseResource);
+		ps.println(Command.getCourseResource);
+		ps.println(courseName);
+        new Thread(new ClientThread(socket, socket2)).start();
+	}
+	public static void uploadCourseResource(File file, String courseName) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.uploadCourseResource);
+		ps.println(Command.uploadCourseResource);
+		ps.println(file.getName());
+		ps.println(courseName);
+		System.out.println(file.getName());
+		int length = 0;  
+        double sumL = 0 ;  
+        byte[] sendBytes = null;  
+        DataOutputStream dos = null;  
+        FileInputStream fis = null;  
+        boolean bool = false;  
+        try {  
+            long l = file.length();
+            dos = new DataOutputStream(socket2.getOutputStream());  
+            fis = new FileInputStream(file);        
+            sendBytes = new byte[1024];    
+            while ((length = fis.read(sendBytes, 0, sendBytes.length)) > 0) {  
+                sumL += length;    
+                System.out.println("已传输："+((sumL/l)*100)+"%");  
+                dos.write(sendBytes, 0, length);  
+                dos.flush();  
+            }   
+            //虽然数据类型不同，但JAVA会自动转换成相同数据类型后在做比较  
+            if(sumL==l){  
+                bool = true;  
+            }  
+        }catch (Exception e) {  
+            System.out.println("客户端文件传输异常");  
+            bool = false;  
+            e.printStackTrace();    
+        } finally{    
+            if (dos != null)  
+                dos.close();  
+            if (fis != null)  
+                fis.close();         
+        }  
+        System.out.println(bool?"成功":"失败");
+        new Thread(new ClientThread(socket, socket2)).start();
+	}
+	public static void downloadCourseResource() {
+		
 	}
 }

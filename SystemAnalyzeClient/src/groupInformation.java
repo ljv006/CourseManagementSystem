@@ -5,6 +5,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -83,7 +85,6 @@ public class groupInformation extends JFrame {
 		JButton refreshInfoButton = new JButton("\u5237\u65B0\u8BFE\u7A0B\u4FE1\u606F");
 		refreshInfoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				f.getContentPane().remove(courseInfoTable);
 				cl.CourseInfoList.clear();
 				try {
 					Client.getCourseInfo(courseName);
@@ -97,17 +98,19 @@ public class groupInformation extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				int count = 0;
+				int count = 1;
 				String[] columnNames = {"Content","Time"};
 				String[][] data = new String[100][2];
+				data[0][0] = "Content";
+				data[0][1] = "Time";
 				for (CourseInformation cif:cl.CourseInfoList) {
 					data[count][0] = cif.content;
 					data[count][1] = cif.time;
 					count++;
 				}
-				courseInfoTable = new JTable(data,columnNames);
-				courseInfoTable.setBounds(10, 47, 181, 204);
-				f.getContentPane().add(courseInfoTable);
+				courseInfoTable.setModel(new DefaultTableModel(data,columnNames));
+				AbstractTableModel model = (AbstractTableModel) courseInfoTable.getModel();
+				model.fireTableDataChanged();
 			}
 		});
 		refreshInfoButton.setBounds(198, 135, 111, 36);

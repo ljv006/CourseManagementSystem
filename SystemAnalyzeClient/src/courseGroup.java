@@ -83,7 +83,18 @@ public class courseGroup extends JFrame {
 		JButton uploaddownloadButton = new JButton("\u4E0A\u4F20/\u4E0B\u8F7D\u8D44\u6E90");
 		uploaddownloadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				uploaddownload ud = new uploaddownload();
+				try {
+					uploaddownload ud = new uploaddownload(_courseName);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		uploaddownloadButton.setBounds(82, 176, 102, 41);
