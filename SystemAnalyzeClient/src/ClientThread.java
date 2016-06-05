@@ -1,4 +1,7 @@
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
@@ -9,8 +12,10 @@ public class ClientThread implements Runnable{
 	private Socket s;
 	BufferedReader br = null;
 	ObjectInputStream is = null;
+	private Socket s2;
 	public ClientThread(Socket s, Socket s2) throws IOException{
 		this.s = s;
+		this.s2 = s2;
 		if (!s.isClosed())
 			br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 		if (!s2.isClosed())
@@ -24,6 +29,8 @@ public class ClientThread implements Runnable{
 				switch(content) {
 				case "LOGINSUCCESS":
 					{
+						User usr = (User)is.readObject();
+						Client.usr = usr;
 						login.loginStatus = "LOGINSUCCESS";
 					}
 					break;
@@ -86,6 +93,51 @@ public class ClientThread implements Runnable{
 				case "UPLOADCOURSERESOURCESUCCESS":
 					{
 						uploaddownload.uploadCourseResourceStatus = "UPLOADCOURSERESOURCESUCCESS";
+					}
+					break;
+				case "DOWNLOADCOURSERESOURCESUCCESS":
+					{
+						byte[] inputByte = null;  
+				        int length = 0;  
+				        DataInputStream dis = null;  
+				        FileOutputStream fos = null;  
+				        String fileName = br.readLine();
+				        //服务器存储文件路径
+				        String filePath = "D:/DownloadCourseResource/" + fileName;
+				        try {  
+				            try {  
+				                dis = new DataInputStream(s2.getInputStream());  
+				                File f = new File("D:/DownloadCourseResource");  
+				                if(!f.exists()){  
+				                    f.mkdir();    
+				                }  
+				                /*   
+				                 * 文件存储位置   
+				                 */  
+				                fos = new FileOutputStream(new File(filePath));      
+				                inputByte = new byte[1024];     
+				                System.out.println("开始接收数据...");    
+				                while ((length = dis.read(inputByte, 0, inputByte.length)) > 0) {  
+				                    fos.write(inputByte, 0, length);  
+				                    fos.flush();      
+				                }  
+				                System.out.println("完成接收："+filePath);
+				            } finally {  
+				                if (fos != null)  
+				                    fos.close();  
+				                if (dis != null)  
+				                    dis.close();  
+				            }  
+				        } catch (Exception e) {  
+				            e.printStackTrace();  
+				        }
+						uploaddownload.downloadCourseResourceStatus = "DOWNLOADCOURSERESOURCESUCCESS";
+					}
+					break;
+				case "SENDMESSAGESUCCESS":
+					{
+						
+					
 					}
 					break;
 				}

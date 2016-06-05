@@ -25,6 +25,7 @@ public class uploaddownload extends JFrame {
 	public static CourseResourceList cl = new CourseResourceList();
 	public static String courseName;
 	public static String uploadCourseResourceStatus;
+	public static String downloadCourseResourceStatus;
 	/**
 	 * Launch the application.
 	 */
@@ -89,9 +90,7 @@ public class uploaddownload extends JFrame {
 		uploadButton.setBounds(252,71,116,36);
 		f.getContentPane().add(uploadButton);
 		
-		JButton downloadButton = new JButton("\u4E0B\u8F7D\u8D44\u6E90");
-		downloadButton.setBounds(252, 108, 116, 36);
-		f.getContentPane().add(downloadButton);
+		
 		//JTable显示
 		cl.CourseResourceList.clear();
 		Client.getCourseResource(courseName);
@@ -109,7 +108,40 @@ public class uploaddownload extends JFrame {
 		courseResourceTable = new JTable(data,columnNames);
 		courseResourceTable.setBounds(10, 38, 199, 199);
 		f.getContentPane().add(courseResourceTable);
-		
+		JButton downloadButton = new JButton("\u4E0B\u8F7D\u8D44\u6E90");
+		downloadButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String fileName;
+				int row = courseResourceTable.getSelectedRow();
+				if ((fileName = (String)courseResourceTable.getValueAt(row, 0)) != null) {
+					try {
+						Client.downloadCourseResource(fileName);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					while (true) {
+						System.out.println("downloadCourseResourceStatus");
+						if (downloadCourseResourceStatus != null && downloadCourseResourceStatus.equals("DOWNLOADCOURSERESOURCESUCCESS")) {
+							JOptionPane.showMessageDialog(getContentPane(),
+									"下载资源成功!", "下载资源成功", JOptionPane.INFORMATION_MESSAGE);
+							try {
+								mainWindow mw = new mainWindow();
+							} catch (IOException | InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							break;
+						}
+						else if (downloadCourseResourceStatus != null && downloadCourseResourceStatus.equals("DOWNLOADCOURSERESOURCEFAIL")) {
+							
+						}
+					}
+				}
+			}
+		});
+		downloadButton.setBounds(252, 108, 116, 36);
+		f.getContentPane().add(downloadButton);
 		JLabel courseResource = new JLabel("\u8BFE\u7A0B\u8D44\u6E90\u5217\u8868");
 		courseResource.setHorizontalAlignment(SwingConstants.CENTER);
 		courseResource.setBounds(10, 10, 177, 27);

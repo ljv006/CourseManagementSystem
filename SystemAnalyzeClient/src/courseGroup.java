@@ -74,7 +74,7 @@ public class courseGroup extends JFrame {
 		JButton chatButton = new JButton("\u804A\u5929");
 		chatButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				chat ch = new chat();
+				chatRoom ch = new chatRoom(courseName);
 			}
 		});
 		chatButton.setBounds(82, 133, 102, 41);

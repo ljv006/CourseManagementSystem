@@ -3,7 +3,9 @@ import java.util.List;
 import java.util.Random;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,7 +42,9 @@ public class ServerThread implements Runnable{
 						is = new ObjectInputStream(s2.getInputStream());
 						try {
 							User user = (User)is.readObject();
-							if (StudentDatabase.isfind(user)) {
+							if (StudentDatabase.isfind(user)) 
+							{
+								os.writeObject(StudentDatabase.getUser(user.ID));
 								ps.println(Command.LoginSuccess);							
 							}
 						}
@@ -247,6 +251,68 @@ public class ServerThread implements Runnable{
 				            e.printStackTrace();  
 				        }  
 						
+					}
+					break;
+				case "DOWNLOADCOURSERESOURCE":
+					{
+						PrintStream ps = new PrintStream(s.getOutputStream());
+						ps.println(Command.downloadCourseResourceSuccess);
+						String fileName = readFromClient();
+						ps.println(fileName);
+						int length = 0;  
+				        double sumL = 0 ;  
+				        byte[] sendBytes = null;  
+				        DataOutputStream dos = null;  
+				        FileInputStream fis = null;
+				        File file = new File("D:/CourseResource/" + fileName);
+				        boolean bool = false;  
+				        try {  
+				            long l = file.length();
+				            dos = new DataOutputStream(s2.getOutputStream());  
+				            fis = new FileInputStream(file);        
+				            sendBytes = new byte[1024];    
+				            while ((length = fis.read(sendBytes, 0, sendBytes.length)) > 0) {  
+				                sumL += length;    
+				                System.out.println("已传输："+((sumL/l)*100)+"%");  
+				                dos.write(sendBytes, 0, length);  
+				                dos.flush();  
+				            }   
+				            //虽然数据类型不同，但JAVA会自动转换成相同数据类型后在做比较  
+				            if(sumL==l){  
+				                bool = true;  
+				            }  
+				        }catch (Exception e) {  
+				            System.out.println("客户端文件传输异常");  
+				            bool = false;  
+				            e.printStackTrace();    
+				        } finally{    
+				            if (dos != null)  
+				                dos.close();  
+				            if (fis != null)  
+				                fis.close();         
+				        }  
+				        System.out.println(bool?"成功":"失败");
+					}
+					break;
+				case "SENDMESSAGE":
+					{
+						PrintStream ps = new PrintStream(s.getOutputStream());
+						ps.println(Command.sendMessageSuccess);
+						String courseName = readFromClient();
+						is = new ObjectInputStream(s2.getInputStream());
+						Chat c;
+						while ((c = (Chat) is.readObject()) != null) {
+							try {
+									String CID = CourseDatabase.getCID(courseName);
+									if (CID != null) {
+										c.CID = CID;
+										chatRoomDatabase.insert(c);
+									}
+							}
+							catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
 					}
 					break;
 				}

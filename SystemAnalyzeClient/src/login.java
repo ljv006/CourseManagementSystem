@@ -81,7 +81,7 @@ public class login extends JFrame {
 						if (loginStatus != null && loginStatus.equals("LOGINSUCCESS")) {
 							JOptionPane.showMessageDialog(getContentPane(),
 									"登录成功!", "登录成功", JOptionPane.INFORMATION_MESSAGE);
-							Client.usr = user;
+							System.out.println("this is user: " + user.name);
 							close();
 							mainWindow mw = new mainWindow();
 							break;

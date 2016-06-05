@@ -23,4 +23,8 @@ public class Command {
 	public static String uploadCourseResourceSuccess = "UPLOADCOURSERESOURCESUCCESS";
 	public static String downloadCourseResource = "DOWNLOADCOURSERESOURCE";
 	public static String downloadCourseResourceSuccess = "DOWNLOADCOURSERESOURCESUCCESS";
+	public static String sendMessage = "SENDMESSAGE";
+	public static String sendMessageSuccess = "SENDMESSAGESUCCESS";
+	public static String getMessage = "GETMESSAGE";
+	public static String getMessageSuccess = "GETMESSAGESUCCESS";
 }

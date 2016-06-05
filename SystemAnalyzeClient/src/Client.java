@@ -196,7 +196,28 @@ public class Client{
         System.out.println(bool?"³É¹¦":"Ê§°Ü");
         new Thread(new ClientThread(socket, socket2)).start();
 	}
-	public static void downloadCourseResource() {
+	public static void downloadCourseResource(String fileName) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.downloadCourseResource);
+		ps.println(Command.downloadCourseResource);
+		ps.println(fileName);
+        new Thread(new ClientThread(socket, socket2)).start();
+	}
+	public static void sendMessage(String courseName, Chat c) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.sendMessage);
+		ps.println(Command.sendMessage);
+		ps.println(courseName);
+		os = new ObjectOutputStream(socket2.getOutputStream());
+		os.writeObject(c); 
+        os.flush();
+        new Thread(new ClientThread(socket, socket2)).start();
+	}
+	public static void getMessage(String courseName) {
 		
 	}
 }
