@@ -77,7 +77,9 @@ public class Client{
 		ps.println(usr.ID);
         new Thread(new ClientThread(socket, socket2)).start();
 	}
-	//教师可以创建课程（未完成）
+	public static void createCourse(String courseName) {
+		
+	}
 	public static void registerCourse(List<String> courseName) throws UnknownHostException, IOException {
 		Socket socket = new Socket(ip, Transfer_port);
 		Socket socket2 = new Socket(ip, Transfer_port2);
@@ -216,8 +218,14 @@ public class Client{
 		os.writeObject(c); 
         os.flush();
         new Thread(new ClientThread(socket, socket2)).start();
-	}
-	public static void getMessage(String courseName) {
-		
+	} 
+	public static void getMessage(String courseName) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.getMessage);
+		ps.println(Command.getMessage);
+		ps.println(courseName);
+        new Thread(new ClientThread(socket, socket2)).start();
 	}
 }

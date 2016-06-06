@@ -9,6 +9,8 @@ public class Command {
 	public static String getAllCourseListSuccess = "GETALLCOURSELISTSUCCESS";
 	public static String getUserCourseList = "GETUSERCOURSELIST";
 	public static String getUserCourseListSuccess = "GETUSERCOURSELISTSUCCESS";
+	public static String createCourse = "CREATECOURSE";
+	public static String createCourseSuccess = "CREATECOURSESUCCESS";
 	public static String registerCourse = "REGISTERCOURSE";
 	public static String registerCourseSuccess = "REGISTERCOURSESUCCESS";
 	public static String getCourseInformation = "GETCOURSEINFORMATION";

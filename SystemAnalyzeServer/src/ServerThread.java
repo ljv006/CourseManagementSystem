@@ -315,6 +315,23 @@ public class ServerThread implements Runnable{
 						}
 					}
 					break;
+				case "GETMESSAGE":
+					{
+						PrintStream ps = new PrintStream(s.getOutputStream());
+						ps.println(Command.getMessageSuccess);
+						String courseName = readFromClient();
+						try {
+							String CID = CourseDatabase.getCID(courseName);
+							List<Chat> chatRecordList = chatRoomDatabase.getChatRecordList(CID);;
+							ChatList cl = new ChatList(chatRecordList);
+							os.writeObject(cl);
+							os.flush();
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+						} 
+					}
+					break;
 				}
 			}
 			System.out.println("end");

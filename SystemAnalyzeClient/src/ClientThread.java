@@ -134,10 +134,13 @@ public class ClientThread implements Runnable{
 						uploaddownload.downloadCourseResourceStatus = "DOWNLOADCOURSERESOURCESUCCESS";
 					}
 					break;
-				case "SENDMESSAGESUCCESS":
+				case "GETMESSAGESUCCESS":
 					{
-						
-					
+						ChatList cl = new ChatList();
+						//”–Œ Ã‚
+						while ((cl = (ChatList)is.readObject()) != null) {
+							chatRoom.cl = cl;
+						}
 					}
 					break;
 				}

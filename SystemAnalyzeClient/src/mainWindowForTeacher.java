@@ -9,6 +9,7 @@ import javax.swing.ListModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
-public class mainWindow extends JFrame {
+public class mainWindowForTeacher extends JFrame {
 
 	private JPanel contentPane;
 	public static CourseList cl = new CourseList();
@@ -59,7 +60,7 @@ public class mainWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					mainWindow frame = new mainWindow();
+					mainWindowForTeacher frame = new mainWindowForTeacher();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -72,7 +73,7 @@ public class mainWindow extends JFrame {
 	 * @throws IOException 
 	 * @throws InterruptedException 
 	 */
-	public mainWindow() throws IOException, InterruptedException {
+	public mainWindowForTeacher() throws IOException, InterruptedException {
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
 		f.getContentPane().setLayout(null);
@@ -102,10 +103,10 @@ public class mainWindow extends JFrame {
 		}
 		JList courselist = new JList(str);
 		JScrollPane ps = new JScrollPane(courselist);  
-        ps.setBounds(0, 30, 180, 230);
+		ps.setBounds(0, 30, 180, 230);
 		f.getContentPane().add(ps);
-		JButton registerCourseButton = new JButton("\u6CE8\u518C\u8BFE\u7A0B");
-		registerCourseButton.addActionListener(new ActionListener() {
+		JButton createCourseButton = new JButton("\u521B\u5EFA\u8BFE\u7A0B");
+		createCourseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					registCourse rc = new registCourse();
@@ -117,8 +118,8 @@ public class mainWindow extends JFrame {
 				}
 			}
 		});
-		registerCourseButton.setBounds(190, 30, 118, 38);
-		f.getContentPane().add(registerCourseButton);
+		createCourseButton.setBounds(190, 30, 118, 38);
+		f.getContentPane().add(createCourseButton);
 		
 		JButton enterGroupButton = new JButton("\u8FDB\u5165\u7FA4\u7EC4");
 		enterGroupButton.addActionListener(new ActionListener() {
@@ -130,7 +131,7 @@ public class mainWindow extends JFrame {
 				}
 			}
 		});
-		enterGroupButton.setBounds(190, 68, 118, 38);
+		enterGroupButton.setBounds(190, 67, 118, 38);
 		f.getContentPane().add(enterGroupButton);
 		
 		JLabel identity = new JLabel();

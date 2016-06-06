@@ -81,10 +81,13 @@ public class login extends JFrame {
 						if (loginStatus != null && loginStatus.equals("LOGINSUCCESS")) {
 							JOptionPane.showMessageDialog(getContentPane(),
 									"登录成功!", "登录成功", JOptionPane.INFORMATION_MESSAGE);
-							System.out.println("this is user: " + user.name);
-							close();
-							mainWindow mw = new mainWindow();
-							break;
+							if (Client.usr.identity.equals("Teacher")) {
+								mainWindowForTeacher mw = new mainWindowForTeacher();
+								break;
+							} else {
+								mainWindow mw = new mainWindow();
+								break;
+							}
 						}
 						else if (loginStatus != null && loginStatus.equals("LOGINFAILED")) {
 							
@@ -111,6 +114,7 @@ public class login extends JFrame {
 		});
 		registerButton.setBounds(217, 170, 90, 35);
 		f.getContentPane().add(registerButton);
+		f.setResizable(false);
 		f.setVisible(true);
 	}
 }

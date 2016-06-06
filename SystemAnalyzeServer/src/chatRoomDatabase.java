@@ -30,7 +30,7 @@ public class chatRoomDatabase {
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
-			String chatInfo[] = out.split(" ");
+			String chatInfo[] = out.split("  ");
 			if (c.content.equals(chatInfo[content])) {
 				return true;
 			}
@@ -39,14 +39,14 @@ public class chatRoomDatabase {
 		fileReader.close();
 		return false;
 	}
-	public static List<Chat> getAllChatRecordList(String _CID) throws IOException {
+	public static List<Chat> getChatRecordList(String _CID) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
 		@SuppressWarnings("resource")
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
 		List<Chat> chatRecordList = new ArrayList<Chat>();
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
-			String chatInfo[] = out.split(" ");
+			String chatInfo[] = out.split("  ");
 			if (chatInfo[CID].equals(_CID)) {
 				Chat c = new Chat(chatInfo[ID], 
 						chatInfo[CID], chatInfo[content], chatInfo[time], chatInfo[speaker]);
@@ -63,19 +63,20 @@ public class chatRoomDatabase {
 		}
 		FileWriter fileWriter = new FileWriter(fileName, true);
 		String input = getID() + "";
-		input += " ";
+		input += "  ";
 		input += c.CID;
-		input += " ";
+		input += "  ";
 		input += c.content;
-		input += " ";
+		input += "  ";
 		input += c.time;
-		input += " ";
+		input += "  ";
 		input += c.speaker;
 		input += "\r\n";
 		fileWriter.write(input);
 		fileWriter.close();
 		return true;
 	}
+	
 	public static  boolean delete(Chat c) throws IOException{
 		if (!isfind(c)) {
 			return false;
@@ -85,7 +86,7 @@ public class chatRoomDatabase {
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
-			String courseResourceInfo[] = out.split(" ");
+			String courseResourceInfo[] = out.split("  ");
 			if (!c.content.equals(courseResourceInfo[content])) {
 				fileWriter.write(out + "\r\n");
 			}

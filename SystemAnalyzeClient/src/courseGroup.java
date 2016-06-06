@@ -118,6 +118,7 @@ public class courseGroup extends JFrame {
 		courseNameLabel.setBounds(143, 10, 145, 27);
 		f.getContentPane().add(courseNameLabel);
 		//获取课程列表
+		f.setResizable(false);
 		f.setVisible(true);
 	}
 }

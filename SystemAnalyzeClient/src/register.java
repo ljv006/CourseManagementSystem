@@ -139,6 +139,7 @@ public class register extends JFrame {
 				}
 			}
 		});
+		f.setResizable(false);
 		f.setVisible(true);
 	}
 }

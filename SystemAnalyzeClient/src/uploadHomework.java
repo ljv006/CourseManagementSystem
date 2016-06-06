@@ -38,6 +38,21 @@ public class uploadHomework extends JFrame {
 	public uploadHomework() {
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
+		JButton gobackButton = new JButton("\u8FD4\u56DE");
+		gobackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					mainWindow newMainWindow = new mainWindow();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		gobackButton.setBounds(332,-1,102,41);
+		f.getContentPane().add(gobackButton);
 		JButton uploadButton = new JButton("\u4E0A\u4F20\u4F5C\u4E1A");
 		uploadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -77,6 +92,7 @@ public class uploadHomework extends JFrame {
 		uploadButton.setBounds(176, 40, 99, 36);
 		f.getContentPane().add(uploadButton);
 		f.getContentPane().setLayout(null);
+		f.setResizable(false);
 		f.setVisible(true);
 	}
 

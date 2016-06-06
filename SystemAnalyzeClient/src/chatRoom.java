@@ -3,7 +3,9 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JTextField;
@@ -19,9 +21,31 @@ public class chatRoom extends JFrame {
 	private JPanel contentPane;
 	private JTextField contentField;
 	public static String courseName;
+	public static ChatList cl;
 	/**
 	 * Launch the application.
 	 */
+	class ChatRoomThread implements Runnable{
+		JList<String> chatContentList;
+		public ChatRoomThread(JList<String> list) {
+			chatContentList = list;
+		}
+		public void run() {
+			while (true) {
+				try {
+					Client.getMessage(courseName);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				DefaultListModel<String> model = new DefaultListModel<String>();
+				for (Chat c:cl.ChatList) {
+					model.addElement(c.speaker + ':' + c.content);
+				}
+				chatContentList.setModel(model);
+			}
+		}
+	}
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -41,6 +65,21 @@ public class chatRoom extends JFrame {
 		courseName = _courseName;
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
+		JButton gobackButton = new JButton("\u8FD4\u56DE");
+		gobackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					mainWindow newMainWindow = new mainWindow();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		gobackButton.setBounds(332,-1,102,41);
+		f.getContentPane().add(gobackButton);
 		JButton sendButton = new JButton("\u53D1\u9001");
 		sendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -64,23 +103,37 @@ public class chatRoom extends JFrame {
 		f.getContentPane().add(sendButton);
 		f.getContentPane().setLayout(null);
 		
-		JList chatContentList = new JList();
-		chatContentList.setBounds(0, 0, 233, 262);
-		f.getContentPane().add(chatContentList);
+		JList<String> chatContentList = new JList<String>();
+		JScrollPane ps = new JScrollPane(chatContentList);  
+        ps.setBounds(0, 0, 233, 262);
+		f.getContentPane().add(ps);
 		
+		try {
+			Client.getMessage(courseName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		DefaultListModel<String> model = new DefaultListModel<String>();
+		for (Chat c:cl.ChatList) {
+			System.out.println(c.speaker);
+			model.addElement(c.speaker + " " + c.time + " " + c.content);
+		}
+		chatContentList.setModel(model);
 		contentField = new JTextField();
 		contentField.setBounds(243, 62, 181, 52);
 		f.getContentPane().add(contentField);
 		contentField.setColumns(10);
 		
-		JButton refreshButton = new JButton("\u5237\u65B0\u804A\u5929\u7A97\u53E3");
-		refreshButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-			}
-		});
-		refreshButton.setBounds(243, 124, 85, 45);
-		f.getContentPane().add(refreshButton);
+		
+		new Thread(new ChatRoomThread(chatContentList)).start();
+		f.setResizable(false);
 		f.setVisible(true);
 	}
 }
