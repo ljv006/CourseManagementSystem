@@ -14,8 +14,12 @@ import java.sql.Statement;
 */
 public class CourseDatabase {
 	static String fileName = System.getProperty("user.dir") + "\\src\\CourseList.txt";
+	static int count = 0;
 	static int ID = 0;
 	static int name =1;
+	public static int getID() {
+		return count++;
+	}
 	public static boolean isfind(Course course) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
 		@SuppressWarnings("resource")
@@ -23,7 +27,7 @@ public class CourseDatabase {
 		String out = "";
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
 			String courseInfo[] = out.split(" ");
-			if (course.ID.equals(courseInfo[ID])) {
+			if (course.name.equals(courseInfo[name])) {
 				return true;
 			}
 		}

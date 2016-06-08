@@ -44,7 +44,7 @@ public class mainWindowForTeacher extends JFrame {
 					e1.printStackTrace();
 				}
 				try {
-					Thread.sleep(10000);
+					Thread.sleep(3000);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -95,7 +95,7 @@ public class mainWindowForTeacher extends JFrame {
 		f.getContentPane().add(lblNewLabel);
 		cl.CourseList.clear();
 		Client.getUserCourseList(Client.usr);
-		Thread.sleep(500);
+		Thread.sleep(1000);
 		String[] str = new String[cl.getSize()];
 		int count = 0;
 		for (Course c:cl.CourseList) {
@@ -109,7 +109,7 @@ public class mainWindowForTeacher extends JFrame {
 		createCourseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					registCourse rc = new registCourse();
+					createCourse cc = new createCourse();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {
@@ -126,7 +126,12 @@ public class mainWindowForTeacher extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String courseName;
 				if ((courseName = (String) courselist.getSelectedValue()) != null) {
-						courseGroup cg = new courseGroup(courseName);
+						try {
+							courseGroupForTeacher cg = new courseGroupForTeacher(courseName);
+						} catch (InterruptedException | IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 						
 				}
 			}

@@ -80,6 +80,40 @@ public class createCourse extends JFrame {
 		f.getContentPane().add(courseNamelabel);
 		
 		JButton createCourseButton = new JButton("\u521B\u5EFA");
+		createCourseButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String cn = courseName.getText();
+				try {
+					Client.createCourse(cn);
+					List<String> strList = new ArrayList<String>();
+					strList.add(cn);
+					Thread.sleep(3000);
+					Client.registerCourse(strList);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				while (true) {
+					if (createCourseStatus != null && createCourseStatus.equals("CREATECOURSESUCCESS")) {
+						JOptionPane.showMessageDialog(getContentPane(),
+								"创建课程成功!", "创建课程成功", JOptionPane.INFORMATION_MESSAGE);
+						try {
+							mainWindowForTeacher mw = new mainWindowForTeacher();
+						} catch (IOException | InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						break;
+					}
+					else if (createCourseStatus != null && createCourseStatus.equals("CREATECOURSEFAILED")) {
+						
+					}
+				}
+			}
+		});
 		createCourseButton.setBounds(182, 83, 110, 41);
 		f.getContentPane().add(createCourseButton);
 		f.setResizable(false);

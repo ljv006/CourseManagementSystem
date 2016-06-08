@@ -52,11 +52,30 @@ public class StudentCourseDatabase {
 		fileReader.close();
 		return courseList;
 	}
+	public static List<User> getCourseUserList(String _CID) throws IOException {
+		FileReader fileReader = new FileReader(fileName);
+		@SuppressWarnings("resource")
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String out = "";
+		List<User> userList = new ArrayList<User>();
+		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
+			String studentcourseInfo[] = out.split(" ");
+			if (studentcourseInfo[CID].equals(_CID)){
+				User c = new User(null, studentcourseInfo[Sname], null, null);
+				userList.add(c);
+			}
+		}
+		bufferedReader.close();
+		fileReader.close();
+		return userList;
+	}
 	public static boolean insert(String SID, String CID) throws IOException {
 		if (!CourseDatabase.isfind(CID) || !StudentDatabase.isfind(SID)) {
+			System.out.println("Booming");
 			return false;
 		}
 		if (StudentCourseDatabase.isfind(SID, CID)) {
+			System.out.println("Booming");
 			return false;
 		}
 		FileWriter fileWriter = new FileWriter(fileName, true);

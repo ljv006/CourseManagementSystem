@@ -77,8 +77,14 @@ public class Client{
 		ps.println(usr.ID);
         new Thread(new ClientThread(socket, socket2)).start();
 	}
-	public static void createCourse(String courseName) {
-		
+	public static void createCourse(String courseName) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.createCourse);
+		ps.println(Command.createCourse);
+		ps.println(courseName);
+        new Thread(new ClientThread(socket, socket2)).start();
 	}
 	public static void registerCourse(List<String> courseName) throws UnknownHostException, IOException {
 		Socket socket = new Socket(ip, Transfer_port);
@@ -225,6 +231,15 @@ public class Client{
 		PrintStream ps = new PrintStream(socket.getOutputStream());
 		System.out.println(Command.getMessage);
 		ps.println(Command.getMessage);
+		ps.println(courseName);
+        new Thread(new ClientThread(socket, socket2)).start();
+	}
+	public static void getCourseGroupMember(String courseName) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.getGroupMember);
+		ps.println(Command.getGroupMember);
 		ps.println(courseName);
         new Thread(new ClientThread(socket, socket2)).start();
 	}

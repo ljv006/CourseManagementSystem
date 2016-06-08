@@ -108,14 +108,13 @@ public class registCourse extends JFrame {
 		}
 		courselist.setModel(model);
 		JScrollPane ps = new JScrollPane(courselist);  
-        ps.setBounds(0, 0, 200, 262);
+        ps.setBounds(0, 30, 180, 230);
 		f.getContentPane().add(ps);
 		
 		JButton registerButton = new JButton("\u6CE8\u518C");
 		registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				List<String> courseName;
-				System.out.println("herehere");
 				if ((courseName = courselist.getSelectedValuesList()) != null) {
 						try {
 							Client.registerCourse(courseName);
@@ -129,7 +128,6 @@ public class registCourse extends JFrame {
 					if (registerCourseStatus != null && registerCourseStatus.equals("REGISTERCOURSESUCCESS")) {
 						JOptionPane.showMessageDialog(getContentPane(),
 								"注册课程成功!", "注册课程成功", JOptionPane.INFORMATION_MESSAGE);
-						close();
 						try {
 							mainWindow mw = new mainWindow();
 						} catch (IOException | InterruptedException e1) {

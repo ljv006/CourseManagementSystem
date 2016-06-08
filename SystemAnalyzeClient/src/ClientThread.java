@@ -61,6 +61,18 @@ public class ClientThread implements Runnable{
 						}
 					}
 					break;
+				case "GETUSERCOURSELISTSUCCESSFORTEACHER":
+				{
+					//用原来的socket
+					CourseList cl = new CourseList();
+					//有问题
+					while ((cl = (CourseList)is.readObject()) != null) {
+						for (Course c:cl.CourseList)
+							System.out.println(c.name);
+						mainWindowForTeacher.cl = cl;
+					}
+				}
+				break;
 				case "REGISTERCOURSESUCCESS":
 					{
 						registCourse.registerCourseStatus = "REGISTERCOURSESUCCESS";
@@ -143,6 +155,20 @@ public class ClientThread implements Runnable{
 						}
 					}
 					break;
+				case "CREATECOURSESUCCESS":
+					{
+						createCourse.createCourseStatus = "CREATECOURSESUCCESS";
+					}
+					break;
+				case "GETGROUPMEMBERSUCCESS":
+				{
+					groupMemberList gl = new groupMemberList();
+					//有问题
+					while ((gl = (groupMemberList)is.readObject()) != null) {
+						courseGroupForTeacher.gl = gl;
+					}
+				}
+				break;
 				}
 			}
 		}

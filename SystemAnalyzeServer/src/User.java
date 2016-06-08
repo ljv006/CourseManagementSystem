@@ -9,10 +9,10 @@ public class User implements Serializable{
 	public String name;
 	public String password;
 	public String identity;
-	public String type;
 	User(String ID, String name, String password, String identity) {
 		this.ID = ID;
 		this.name = name;
+		this.password = password;
 		this.identity = identity;
 	}
 }

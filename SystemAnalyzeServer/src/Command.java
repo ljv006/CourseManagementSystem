@@ -9,6 +9,7 @@ public class Command {
 	public static String getAllCourseListSuccess = "GETALLCOURSELISTSUCCESS";
 	public static String getUserCourseList = "GETUSERCOURSELIST";
 	public static String getUserCourseListSuccess = "GETUSERCOURSELISTSUCCESS";
+	public static String getUserCourseListSuccessForTeacher = "GETUSERCOURSELISTSUCCESSFORTEACHER";
 	public static String createCourse = "CREATECOURSE";
 	public static String createCourseSuccess = "CREATECOURSESUCCESS";
 	public static String registerCourse = "REGISTERCOURSE";
@@ -29,4 +30,6 @@ public class Command {
 	public static String sendMessageSuccess = "SENDMESSAGESUCCESS";
 	public static String getMessage = "GETMESSAGE";
 	public static String getMessageSuccess = "GETMESSAGESUCCESS";
+	public static String getGroupMember = "GETGROUPMEMBER";
+	public static String getGroupMemberSuccess = "GETGROUPMEMBERSUCCESS";
 }

@@ -43,7 +43,7 @@ public class mainWindow extends JFrame {
 					e1.printStackTrace();
 				}
 				try {
-					Thread.sleep(10000);
+					Thread.sleep(3000);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -94,7 +94,7 @@ public class mainWindow extends JFrame {
 		f.getContentPane().add(lblNewLabel);
 		cl.CourseList.clear();
 		Client.getUserCourseList(Client.usr);
-		Thread.sleep(500);
+		Thread.sleep(1000);
 		String[] str = new String[cl.getSize()];
 		int count = 0;
 		for (Course c:cl.CourseList) {

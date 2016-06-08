@@ -95,13 +95,17 @@ public class ServerThread implements Runnable{
 					break;
 				case "GETUSERCOURSELIST":
 					{
-						PrintStream ps = new PrintStream(s.getOutputStream());
-						ps.println(Command.getUserCourseListSuccess);
 						String ID = readFromClient();
+						PrintStream ps = new PrintStream(s.getOutputStream());
+						User usr = StudentDatabase.getUser(ID);
+						if (usr.identity.equals("Teacher")) {
+							ps.println(Command.getUserCourseListSuccessForTeacher);
+						} else {
+							ps.println(Command.getUserCourseListSuccess);
+						}
 						try {
 							List<Course> courseList = StudentCourseDatabase.getUserCourseList(ID);
 							CourseList cl = new CourseList(courseList);
-							System.out.println("the size:" + cl.getSize());
 							os.writeObject(cl);
 							os.flush();
 						}
@@ -123,6 +127,8 @@ public class ServerThread implements Runnable{
 									String CID = CourseDatabase.getCID(cname);
 									if (CID != null) {
 										StudentCourseDatabase.insert(SID, CID);
+									} else {
+										System.out.println("NULL");
 									}
 								}
 							}
@@ -325,6 +331,37 @@ public class ServerThread implements Runnable{
 							List<Chat> chatRecordList = chatRoomDatabase.getChatRecordList(CID);;
 							ChatList cl = new ChatList(chatRecordList);
 							os.writeObject(cl);
+							os.flush();
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+						} 
+					}
+					break;
+				case "CREATECOURSE":
+					{
+						PrintStream ps = new PrintStream(s.getOutputStream());
+						ps.println(Command.createCourseSuccess);
+						String courseName = readFromClient();
+						try {
+							Course c = new Course(CourseDatabase.getID() + "", courseName);
+							CourseDatabase.insert(c);;
+						}
+						catch (IOException e) {
+							e.printStackTrace();
+						} 
+					}
+					break;
+				case "GETGROUPMEMBER":
+					{
+						PrintStream ps = new PrintStream(s.getOutputStream());
+						ps.println(Command.getGroupMemberSuccess);
+						String courseName = readFromClient();
+						try {
+							String CID = CourseDatabase.getCID(courseName);
+							List<User> userList = StudentCourseDatabase.getCourseUserList(CID);
+							groupMemberList gl = new groupMemberList(userList);
+							os.writeObject(gl);
 							os.flush();
 						}
 						catch (IOException e) {
