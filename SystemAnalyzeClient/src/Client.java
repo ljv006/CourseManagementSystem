@@ -77,7 +77,16 @@ public class Client{
 		ps.println(usr.ID);
         new Thread(new ClientThread(socket, socket2)).start();
 	}
-	//教师可以创建课程（未完成）
+	public static void createCourse(String courseName) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.createCourse);
+		ps.println(Command.createCourse);
+		ps.println(Client.usr.ID);
+		ps.println(courseName);
+        new Thread(new ClientThread(socket, socket2)).start();
+	}
 	public static void registerCourse(List<String> courseName) throws UnknownHostException, IOException {
 		Socket socket = new Socket(ip, Transfer_port);
 		Socket socket2 = new Socket(ip, Transfer_port2);
@@ -90,8 +99,16 @@ public class Client{
         os.flush();
         new Thread(new ClientThread(socket, socket2)).start();
 	}
-	public static void setCourseInfo() {
-		
+	public static void setCourseInfo(String courseName, String content, String time) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.setCourseInformation);
+		ps.println(Command.setCourseInformation);
+		ps.println(courseName);
+		ps.println(content);
+		ps.println(time);
+        new Thread(new ClientThread(socket, socket2)).start();
 	}
 	public static void getCourseInfo(String courseName) throws UnknownHostException, IOException {
 		Socket socket = new Socket(ip, Transfer_port);
@@ -99,6 +116,7 @@ public class Client{
 		PrintStream ps = new PrintStream(socket.getOutputStream());
 		System.out.println(Command.getCourseInformation);
 		ps.println(Command.getCourseInformation);
+		ps.println(Client.usr.identity);
 		ps.println(courseName);
         new Thread(new ClientThread(socket, socket2)).start();
 	}
@@ -196,7 +214,43 @@ public class Client{
         System.out.println(bool?"成功":"失败");
         new Thread(new ClientThread(socket, socket2)).start();
 	}
-	public static void downloadCourseResource() {
-		
+	public static void downloadCourseResource(String fileName) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.downloadCourseResource);
+		ps.println(Command.downloadCourseResource);
+		ps.println(fileName);
+        new Thread(new ClientThread(socket, socket2)).start();
+	}
+	public static void sendMessage(String courseName, Chat c) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.sendMessage);
+		ps.println(Command.sendMessage);
+		ps.println(courseName);
+		os = new ObjectOutputStream(socket2.getOutputStream());
+		os.writeObject(c); 
+        os.flush();
+        new Thread(new ClientThread(socket, socket2)).start();
+	} 
+	public static void getMessage(String courseName) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.getMessage);
+		ps.println(Command.getMessage);
+		ps.println(courseName);
+        new Thread(new ClientThread(socket, socket2)).start();
+	}
+	public static void getCourseGroupMember(String courseName) throws UnknownHostException, IOException {
+		Socket socket = new Socket(ip, Transfer_port);
+		Socket socket2 = new Socket(ip, Transfer_port2);
+		PrintStream ps = new PrintStream(socket.getOutputStream());
+		System.out.println(Command.getGroupMember);
+		ps.println(Command.getGroupMember);
+		ps.println(courseName);
+        new Thread(new ClientThread(socket, socket2)).start();
 	}
 }

@@ -129,7 +129,12 @@ public class register extends JFrame {
 							break;
 						}
 						else if (registerStatus != null && registerStatus.equals("REGISTERFAILED")) {
-							
+							System.out.println(registerStatus);
+							JOptionPane.showMessageDialog(getContentPane(),
+									"用户已存在!", "注册失败", JOptionPane.INFORMATION_MESSAGE);
+							close();
+							register r = new register();
+							break;
 						}
 					}
 					
@@ -139,6 +144,7 @@ public class register extends JFrame {
 				}
 			}
 		});
+		f.setResizable(false);
 		f.setVisible(true);
 	}
 }

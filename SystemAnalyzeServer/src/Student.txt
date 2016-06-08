@@ -1,2 +1,2 @@
-001 jerry 001 TA
-002 jack 002 TA
+001 Jerry 001 Student
+003 Sam 003 Teacher

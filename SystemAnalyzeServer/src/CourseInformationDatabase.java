@@ -14,10 +14,14 @@ import java.sql.Statement;
 */
 public class CourseInformationDatabase {
 	static String fileName = System.getProperty("user.dir") + "\\src\\CourseInformationList.txt";
+	static int count = 0;
 	static int ID = 0;
 	static int CID = 1;
 	static int time = 2;
 	static int content = 3;
+	public static int getID(){
+		return count++;
+	}
 	public static boolean isfind(CourseInformation courseInformation) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
 		@SuppressWarnings("resource")
@@ -25,7 +29,7 @@ public class CourseInformationDatabase {
 		String out = "";
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
 			String courseInfoInfo[] = out.split(" ");
-			if (courseInformation.ID.equals(courseInfoInfo[ID])) {
+			if (courseInformation.content.equals(courseInfoInfo[content])) {
 				return true;
 			}
 		}
@@ -57,7 +61,7 @@ public class CourseInformationDatabase {
 			return false;
 		}
 		FileWriter fileWriter = new FileWriter(fileName, true);
-		String input = courseInformation.ID;
+		String input = getID() + "";
 		input += " ";
 		input += courseInformation.CID;
 		input += " ";

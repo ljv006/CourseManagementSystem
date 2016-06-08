@@ -3,9 +3,11 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
@@ -25,9 +27,46 @@ public class uploaddownload extends JFrame {
 	public static CourseResourceList cl = new CourseResourceList();
 	public static String courseName;
 	public static String uploadCourseResourceStatus;
+	public static String downloadCourseResourceStatus;
 	/**
 	 * Launch the application.
 	 */
+	class uploaddownloadThread implements Runnable{
+		JTable courseResourceList;
+		public uploaddownloadThread(JTable table) {
+			courseResourceList = table;
+		}
+		public void run() {
+			while (true) {
+				cl.CourseResourceList.clear();
+				try {
+					Client.getCourseResource(courseName);
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				int count = 1;
+				String[] columnNames = {"Filename","Size"};
+				String[][] data = new String[100][2];
+				data[0][0] = "Filename";
+				data[0][1] = "Size";
+				for (CourseResource cr:cl.CourseResourceList) {
+					data[count][0] = cr.fileName;
+					data[count][1] = cr.size;
+					count++;
+				}
+				courseResourceTable.setModel(new DefaultTableModel(data,columnNames));
+				AbstractTableModel model = (AbstractTableModel) courseResourceTable.getModel();
+				model.fireTableDataChanged();
+			}
+		}
+	}
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -51,6 +90,21 @@ public class uploaddownload extends JFrame {
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
 		f.getContentPane().setLayout(null);
+		JButton gobackButton = new JButton("\u8FD4\u56DE");
+		gobackButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					mainWindow newMainWindow = new mainWindow();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		gobackButton.setBounds(342,3,102,41);
+		f.getContentPane().add(gobackButton);
 		JButton uploadButton = new JButton("\u4E0A\u4F20\u8D44\u6E90");
 		uploadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -72,12 +126,6 @@ public class uploaddownload extends JFrame {
 					if (uploadCourseResourceStatus != null && uploadCourseResourceStatus.equals("UPLOADCOURSERESOURCESUCCESS")) {
 						JOptionPane.showMessageDialog(getContentPane(),
 								"上传资源成功!", "上传资源成功", JOptionPane.INFORMATION_MESSAGE);
-						try {
-							mainWindow mw = new mainWindow();
-						} catch (IOException | InterruptedException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
 						break;
 					}
 					else if (uploadCourseResourceStatus != null && uploadCourseResourceStatus.equals("UPLOADCOURSERESOURCEFAIL")) {
@@ -86,12 +134,10 @@ public class uploaddownload extends JFrame {
 				}
 			}
 		});
-		uploadButton.setBounds(252,71,116,36);
+		uploadButton.setBounds(219,44,116,36);
 		f.getContentPane().add(uploadButton);
 		
-		JButton downloadButton = new JButton("\u4E0B\u8F7D\u8D44\u6E90");
-		downloadButton.setBounds(252, 108, 116, 36);
-		f.getContentPane().add(downloadButton);
+		
 		//JTable显示
 		cl.CourseResourceList.clear();
 		Client.getCourseResource(courseName);
@@ -107,47 +153,43 @@ public class uploaddownload extends JFrame {
 			count++;
 		}
 		courseResourceTable = new JTable(data,columnNames);
-		courseResourceTable.setBounds(10, 38, 199, 199);
-		f.getContentPane().add(courseResourceTable);
-		
+		JScrollPane ps = new JScrollPane(courseResourceTable);  
+        ps.setBounds(0, 0, 200, 262);
+		f.getContentPane().add(ps);
+		JButton downloadButton = new JButton("\u4E0B\u8F7D\u8D44\u6E90");
+		downloadButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String fileName;
+				int row = courseResourceTable.getSelectedRow();
+				if ((fileName = (String)courseResourceTable.getValueAt(row, 0)) != null) {
+					try {
+						Client.downloadCourseResource(fileName);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					while (true) {
+						System.out.println("downloadCourseResourceStatus");
+						if (downloadCourseResourceStatus != null && downloadCourseResourceStatus.equals("DOWNLOADCOURSERESOURCESUCCESS")) {
+							JOptionPane.showMessageDialog(getContentPane(),
+									"下载资源成功!", "下载资源成功", JOptionPane.INFORMATION_MESSAGE);
+							break;
+						}
+						else if (downloadCourseResourceStatus != null && downloadCourseResourceStatus.equals("DOWNLOADCOURSERESOURCEFAIL")) {
+							
+						}
+					}
+				}
+			}
+		});
+		downloadButton.setBounds(219, 80, 116, 36);
+		f.getContentPane().add(downloadButton);
 		JLabel courseResource = new JLabel("\u8BFE\u7A0B\u8D44\u6E90\u5217\u8868");
 		courseResource.setHorizontalAlignment(SwingConstants.CENTER);
 		courseResource.setBounds(10, 10, 177, 27);
 		f.getContentPane().add(courseResource);
-		
-		JButton refreshButton = new JButton("\u5237\u65B0\u5217\u8868");
-		refreshButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cl.CourseResourceList.clear();
-				try {
-					Client.getCourseResource(courseName);
-				} catch (IOException e2) {
-					// TODO Auto-generated catch block
-					e2.printStackTrace();
-				}
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				int count = 1;
-				String[] columnNames = {"Filename","Size"};
-				String[][] data = new String[100][2];
-				data[0][0] = "Filename";
-				data[0][1] = "Size";
-				for (CourseResource cr:cl.CourseResourceList) {
-					data[count][0] = cr.fileName;
-					data[count][1] = cr.size;
-					count++;
-				}
-				courseResourceTable.setModel(new DefaultTableModel(data,columnNames));
-				AbstractTableModel model = (AbstractTableModel) courseResourceTable.getModel();
-				model.fireTableDataChanged();
-			}
-		});
-		refreshButton.setBounds(252, 34, 116, 36);
-		f.getContentPane().add(refreshButton);
+		new Thread(new uploaddownloadThread(courseResourceTable)).start();
+		f.setResizable(false);
 		f.setVisible(true);
 	}
 }

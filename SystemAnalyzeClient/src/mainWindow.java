@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListModel;
 import javax.swing.border.EmptyBorder;
@@ -28,6 +29,32 @@ public class mainWindow extends JFrame {
 	/**
 	 * Launch the application.
 	 */
+	class mainWindowThread implements Runnable{
+		JList<String> courseList;
+		public mainWindowThread(JList<String> list) {
+			courseList = list;
+		}
+		public void run() {
+			while (true) {
+				cl.CourseList.clear();
+				try {
+					Client.getUserCourseList(Client.usr);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				DefaultListModel model = new DefaultListModel();
+				for (Course c:cl.CourseList) {
+					model.addElement(c.name);
+				}
+				courseList.setModel(model);
+			}
+		}
+	}
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -67,16 +94,17 @@ public class mainWindow extends JFrame {
 		f.getContentPane().add(lblNewLabel);
 		cl.CourseList.clear();
 		Client.getUserCourseList(Client.usr);
-		Thread.sleep(500);
+		Thread.sleep(1000);
 		String[] str = new String[cl.getSize()];
 		int count = 0;
 		for (Course c:cl.CourseList) {
 			str[count++] = c.name;
 		}
 		JList courselist = new JList(str);
-		courselist.setBounds(10, 37, 180, 215);
-		f.getContentPane().add(courselist);
-		JButton registerCourseButton = new JButton("\u6CE8\u518C/\u521B\u5EFA\u8BFE\u7A0B");
+		JScrollPane ps = new JScrollPane(courselist);  
+        ps.setBounds(0, 30, 180, 230);
+		f.getContentPane().add(ps);
+		JButton registerCourseButton = new JButton("\u6CE8\u518C\u8BFE\u7A0B");
 		registerCourseButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -89,7 +117,7 @@ public class mainWindow extends JFrame {
 				}
 			}
 		});
-		registerCourseButton.setBounds(200, 71, 118, 38);
+		registerCourseButton.setBounds(190, 62, 118, 38);
 		f.getContentPane().add(registerCourseButton);
 		
 		JButton enterGroupButton = new JButton("\u8FDB\u5165\u7FA4\u7EC4");
@@ -102,32 +130,19 @@ public class mainWindow extends JFrame {
 				}
 			}
 		});
-		enterGroupButton.setBounds(200, 108, 118, 38);
+		enterGroupButton.setBounds(190, 102, 118, 38);
 		f.getContentPane().add(enterGroupButton);
 		
-		JButton refreshButton = new JButton("\u5237\u65B0\u5217\u8868");
-		refreshButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cl.CourseList.clear();
-				try {
-					Client.getUserCourseList(Client.usr);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
-				DefaultListModel model = new DefaultListModel();
-				for (Course c:cl.CourseList) {
-					model.addElement(c.name);
-				}
-				courselist.setModel(model);
-			}
-		});
-		refreshButton.setBounds(200, 34, 118, 38);
-		f.getContentPane().add(refreshButton);
+		JLabel identity = new JLabel();
+		identity.setText("当前用户：" + Client.usr.name);
+		identity.setBounds(190, 10, 133, 20);
+		f.getContentPane().add(identity);
+		JLabel identityLabel = new JLabel();
+		identityLabel.setText("用户权限：" + Client.usr.identity);
+		identityLabel.setBounds(190, 28, 133, 20);
+		f.getContentPane().add(identityLabel);
+		new Thread(new mainWindowThread(courselist)).start();
+		f.setResizable(false);
 		f.setVisible(true);
 	}
 }

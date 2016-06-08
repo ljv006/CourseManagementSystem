@@ -74,7 +74,7 @@ public class courseGroup extends JFrame {
 		JButton chatButton = new JButton("\u804A\u5929");
 		chatButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				chat ch = new chat();
+				chatRoom ch = new chatRoom(courseName);
 			}
 		});
 		chatButton.setBounds(82, 133, 102, 41);
@@ -118,6 +118,7 @@ public class courseGroup extends JFrame {
 		courseNameLabel.setBounds(143, 10, 145, 27);
 		f.getContentPane().add(courseNameLabel);
 		//获取课程列表
+		f.setResizable(false);
 		f.setVisible(true);
 	}
 }

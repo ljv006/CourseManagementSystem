@@ -18,14 +18,14 @@ public class StudentCourseDatabase {
 	static int Sname = 1;
 	static int CID = 2;
 	static int Cname = 3;
-	public static boolean isfind(String _SID, String _CID) throws IOException {
+	public static boolean isfind(String _Sname, String _Cname) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
 		@SuppressWarnings("resource")
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
 			String studentcourseInfo[] = out.split(" ");
-			if (_SID.equals(studentcourseInfo[SID]) && _CID.equals(studentcourseInfo[CID])) {
+			if (_Sname.equals(studentcourseInfo[Sname]) && _Cname.equals(studentcourseInfo[Cname])) {
 				return true;
 			}
 		}
@@ -52,10 +52,24 @@ public class StudentCourseDatabase {
 		fileReader.close();
 		return courseList;
 	}
-	public static boolean insert(String SID, String CID) throws IOException {
-		if (!CourseDatabase.isfind(CID) || !StudentDatabase.isfind(SID)) {
-			return false;
+	public static List<User> getCourseUserList(String _CID) throws IOException {
+		FileReader fileReader = new FileReader(fileName);
+		@SuppressWarnings("resource")
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String out = "";
+		List<User> userList = new ArrayList<User>();
+		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
+			String studentcourseInfo[] = out.split(" ");
+			if (studentcourseInfo[CID].equals(_CID)){
+				User c = new User(null, studentcourseInfo[Sname], null, null);
+				userList.add(c);
+			}
 		}
+		bufferedReader.close();
+		fileReader.close();
+		return userList;
+	}
+	public static boolean insert(String SID, String CID) throws IOException {
 		if (StudentCourseDatabase.isfind(SID, CID)) {
 			return false;
 		}

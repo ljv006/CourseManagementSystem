@@ -11,6 +11,7 @@ public class StudentDatabase {
 	static int ID = 0;
 	static int name =1;
 	static int password = 2;
+	static int identity = 3;
 	public static boolean isfind(User user) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
 		@SuppressWarnings("resource")
@@ -40,6 +41,22 @@ public class StudentDatabase {
 		bufferedReader.close();
 		fileReader.close();
 		return false;
+	}
+	public static User getUser(String _ID) throws IOException {
+		FileReader fileReader = new FileReader(fileName);
+		@SuppressWarnings("resource")
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String out = "";
+		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
+			String studentInfo[] = out.split(" ");
+			if (_ID.equals(studentInfo[ID])) {
+				User usr = new User(studentInfo[ID], studentInfo[name], studentInfo[password], studentInfo[identity]);
+				return usr;
+			}
+		}
+		bufferedReader.close();
+		fileReader.close();
+		return null;
 	}
 	public static String getSname(String SID) throws IOException {
 		FileReader fileReader = new FileReader(fileName);

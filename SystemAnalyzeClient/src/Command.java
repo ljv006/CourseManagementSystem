@@ -9,10 +9,14 @@ public class Command {
 	public static String getAllCourseListSuccess = "GETALLCOURSELISTSUCCESS";
 	public static String getUserCourseList = "GETUSERCOURSELIST";
 	public static String getUserCourseListSuccess = "GETUSERCOURSELISTSUCCESS";
+	public static String getUserCourseListSuccessForTeacher = "GETUSERCOURSELISTSUCCESSFORTEACHER";
+	public static String createCourse = "CREATECOURSE";
+	public static String createCourseSuccess = "CREATECOURSESUCCESS";
 	public static String registerCourse = "REGISTERCOURSE";
 	public static String registerCourseSuccess = "REGISTERCOURSESUCCESS";
 	public static String getCourseInformation = "GETCOURSEINFORMATION";
 	public static String getCourseInformationSuccess = "GETCOURSEINFORMATIONSUCCESS";
+	public static String getCourseInformationSuccessForTeacher = "GETCOURSEINFORMATIONSUCCESSFORTEACHER";
 	public static String setCourseInformation = "SETCOURSEINFORMATION";
 	public static String setCourseInformationSuccess = "SETCOURSEINFORMATIONSUCCESS";
 	public static String uploadHomework = "UPLOADHOMEWORK";
@@ -23,4 +27,10 @@ public class Command {
 	public static String uploadCourseResourceSuccess = "UPLOADCOURSERESOURCESUCCESS";
 	public static String downloadCourseResource = "DOWNLOADCOURSERESOURCE";
 	public static String downloadCourseResourceSuccess = "DOWNLOADCOURSERESOURCESUCCESS";
+	public static String sendMessage = "SENDMESSAGE";
+	public static String sendMessageSuccess = "SENDMESSAGESUCCESS";
+	public static String getMessage = "GETMESSAGE";
+	public static String getMessageSuccess = "GETMESSAGESUCCESS";
+	public static String getGroupMember = "GETGROUPMEMBER";
+	public static String getGroupMemberSuccess = "GETGROUPMEMBERSUCCESS";
 }
