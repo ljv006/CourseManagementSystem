@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 */
 public class UserDatabase {
-	static String fileName = System.getProperty("user.dir") + "\\src\\Student.txt";
+	static String fileName = System.getProperty("user.dir") + "\\User.txt";
 	static int ID = 0;
 	static int name =1;
 	static int password = 2;

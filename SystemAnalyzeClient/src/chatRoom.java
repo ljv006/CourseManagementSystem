@@ -72,8 +72,13 @@ public class chatRoom extends JFrame {
 			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				try {
-					@SuppressWarnings("unused")
-					mainWindow newMainWindow = new mainWindow();
+					if (Client.usr.identity.equals("Teacher")) {
+						@SuppressWarnings("unused")
+						mainWindowForTeacher newMainWindow = new mainWindowForTeacher();
+					} else {
+						@SuppressWarnings("unused")
+						mainWindow newMainWindow = new mainWindow();
+					}
 					t.stop();
 					f.dispose();
 				} catch (IOException e1) {

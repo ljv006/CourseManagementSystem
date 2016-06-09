@@ -80,8 +80,13 @@ public class registCourse extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				close();
 				try {
-					@SuppressWarnings("unused")
-					mainWindow newMainWindow = new mainWindow();
+					if (!Client.usr.identity.equals("Teacher")) {
+						@SuppressWarnings("unused")
+						mainWindow newMainWindow = new mainWindow();
+					} else {
+						@SuppressWarnings("unused")
+						mainWindowForTeacher newMainWindow = new mainWindowForTeacher();
+					}
 					t.stop();
 					f.dispose();
 				} catch (IOException e1) {
@@ -113,7 +118,6 @@ public class registCourse extends JFrame {
 		
 		JButton registerButton = new JButton("\u6CE8\u518C");
 		registerButton.addActionListener(new ActionListener() {
-			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				List<String> courseName;
 				if ((courseName = courselist.getSelectedValuesList()) != null) {
@@ -129,8 +133,6 @@ public class registCourse extends JFrame {
 					if (registerCourseStatus != null && registerCourseStatus.equals("REGISTERCOURSESUCCESS")) {
 						JOptionPane.showMessageDialog(getContentPane(),
 								"注册课程成功!", "注册课程成功", JOptionPane.INFORMATION_MESSAGE);
-						t.stop();
-						f.dispose();
 						break;
 					}
 					else if (registerCourseStatus != null && registerCourseStatus.equals("REGISTERCOURSEFAIL")) {

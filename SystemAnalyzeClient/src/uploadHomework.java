@@ -35,8 +35,13 @@ public class uploadHomework extends JFrame {
 		gobackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					@SuppressWarnings("unused")
-					mainWindow newMainWindow = new mainWindow();
+					if (!Client.usr.identity.equals("Teacher")) {
+						@SuppressWarnings("unused")
+						mainWindow newMainWindow = new mainWindow();
+					} else {
+						@SuppressWarnings("unused")
+						mainWindowForTeacher newMainWindow = new mainWindowForTeacher();
+					}
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {

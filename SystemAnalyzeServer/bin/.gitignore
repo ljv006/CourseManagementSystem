@@ -34,3 +34,5 @@
 /ChatList.class
 /groupMemberList.class
 /UserDatabase.class
+/UserCourseDatabase.class
+/UserCourse.class

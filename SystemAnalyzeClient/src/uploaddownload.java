@@ -43,7 +43,7 @@ public class uploaddownload extends JFrame {
 					e2.printStackTrace();
 				}
 				try {
-					Thread.sleep(10000);
+					Thread.sleep(3000);
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -94,8 +94,13 @@ public class uploaddownload extends JFrame {
 			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				try {
-					@SuppressWarnings("unused")
-					mainWindow newMainWindow = new mainWindow();
+					if (Client.usr.identity.equals("Teacher")) {
+						@SuppressWarnings("unused")
+						mainWindowForTeacher newMainWindow = new mainWindowForTeacher();
+					} else {
+						@SuppressWarnings("unused")
+						mainWindow newMainWindow = new mainWindow();
+					}
 					t.stop();
 					f.dispose();
 				} catch (IOException e1) {

@@ -18,6 +18,24 @@ public class Server {
 		ServerSocket ss = new ServerSocket(Receive_port);
 		@SuppressWarnings("resource")
 		ServerSocket sss = new ServerSocket(Server.Receive_port2);
+		String path = System.getProperty("user.dir");
+		File f = new File(path);
+		if(!f.exists()){
+			f.mkdirs();
+		} 
+		String fileName[] = {"UserCourseList.txt", "chatRoomRecord.txt","CourseInformationList.txt",
+				"CourseList.txt","CourseResourceList.txt","User.txt"};
+		File file[] = new File[6];
+		for (int i = 0; i < 6; i++) {
+			file[i] = new File(fileName[i]);
+			if(!file[i].exists()){
+				try {
+					file[i].createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}	
+		}
 		while (true) {
 			Socket s = ss.accept();
 			Socket s2 = sss.accept();

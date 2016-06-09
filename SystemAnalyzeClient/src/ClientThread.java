@@ -99,7 +99,6 @@ public class ClientThread implements Runnable{
 				case Command.getCourseInformationSuccessForTeacher:
 					{
 						CourseInformationList cl = new CourseInformationList();
-						//有问题
 						while ((cl = (CourseInformationList)is.readObject()) != null) {
 							groupInformationForTeacher.cl = cl;
 						}
@@ -132,11 +131,11 @@ public class ClientThread implements Runnable{
 				        FileOutputStream fos = null;  
 				        String fileName = br.readLine();
 				        //服务器存储文件路径
-				        String filePath = "D:/DownloadCourseResource/" + fileName;
+				        String filePath = System.getProperty("user.dir") + "//DownloadCourseResource//" + fileName;
 				        try {  
 				            try {  
 				                dis = new DataInputStream(s2.getInputStream());  
-				                File f = new File("D:/DownloadCourseResource");  
+				                File f = new File(System.getProperty("user.dir") + "//DownloadCourseResource");  
 				                if(!f.exists()){  
 				                    f.mkdir();    
 				                }  

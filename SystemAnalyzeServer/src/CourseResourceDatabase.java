@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 */
 public class CourseResourceDatabase {
-	static String fileName = System.getProperty("user.dir") + "\\src\\CourseResourceList.txt";
+	static String fileName = System.getProperty("user.dir") + "\\CourseResourceList.txt";
 	static int ID = 0;
 	static int CID = 1;
 	static int filename = 2;
@@ -34,14 +34,14 @@ public class CourseResourceDatabase {
 		fileReader.close();
 		return maxID;
 	}
-	public static boolean isfind(String fileName) throws IOException {
+	public static boolean isfind(String _fileName) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
 		@SuppressWarnings("resource")
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
 			String courseResourceInfo[] = out.split(" ");
-			if (fileName.equals(courseResourceInfo[filename])) {
+			if (_fileName.equals(courseResourceInfo[filename])) {
 				return true;
 			}
 		}
@@ -54,7 +54,7 @@ public class CourseResourceDatabase {
 		@SuppressWarnings("resource")
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
-		File file=new File("D:/CourseResource");
+		File file=new File(System.getProperty("user.dir") + "//CourseResource");
 		//如果是文件夹，声明一个数组放文件夹和他的子文件
 		File[] f=file.listFiles();
 		//遍历文件件下的文件，并获取路径

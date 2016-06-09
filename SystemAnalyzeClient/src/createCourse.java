@@ -50,7 +50,7 @@ public class createCourse extends JFrame {
 				close();
 				try {
 					@SuppressWarnings("unused")
-					mainWindow newMainWindow = new mainWindow();
+					mainWindowForTeacher newMainWindow = new mainWindowForTeacher();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {

@@ -12,14 +12,26 @@ import java.sql.SQLException;
 import java.sql.Statement;
 */
 public class CourseInformationDatabase {
-	static String fileName = System.getProperty("user.dir") + "\\src\\CourseInformationList.txt";
-	static int count = 0;
+	static String fileName = System.getProperty("user.dir") + "\\CourseInformationList.txt";
 	static int ID = 0;
 	static int CID = 1;
 	static int time = 2;
 	static int content = 3;
-	public static int getID(){
-		return count++;
+	public static int getID() throws NumberFormatException, IOException{
+		FileReader fileReader = new FileReader(fileName);
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String out = "";
+		int maxID = 0;
+		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
+			String studentcourseInfo[] = out.split(" ");
+			if (Integer.parseInt(studentcourseInfo[ID]) > maxID) {
+				maxID = Integer.parseInt(studentcourseInfo[ID]);
+			}
+		}
+		maxID = maxID + 1;
+		bufferedReader.close();
+		fileReader.close();
+		return maxID;
 	}
 	public static boolean isfind(String _content) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
@@ -44,7 +56,7 @@ public class CourseInformationDatabase {
 		List<CourseInformation> courseInfoList = new ArrayList<CourseInformation>();
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
 			String courseInfoInfo[] = out.split(" ");
-			if (courseInfoInfo[CID].equals(_CID)) {
+			if (Integer.parseInt(courseInfoInfo[CID]) == _CID) {
 				CourseInformation courseInfo = new CourseInformation(Integer.parseInt(courseInfoInfo[ID]), 
 						_CID, courseInfoInfo[time], courseInfoInfo[content]);
 				courseInfoList.add(courseInfo);

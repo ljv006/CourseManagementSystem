@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 */
 public class CourseDatabase {
-	static String fileName = System.getProperty("user.dir") + "\\src\\CourseList.txt";
+	static String fileName = System.getProperty("user.dir") + "\\CourseList.txt";
 	static int ID = 0;
 	static int name =1;
 	public static int getID() throws IOException {

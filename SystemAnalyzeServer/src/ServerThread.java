@@ -108,7 +108,7 @@ public class ServerThread implements Runnable{
 							ps.println(Command.getUserCourseListSuccess);
 						}
 						try {
-							List<Course> courseList = StudentCourseDatabase.getUserCourseList(ID);
+							List<Course> courseList = UserCourseDatabase.getUserCourseList(ID);
 							CourseList cl = new CourseList(courseList);
 							os.writeObject(cl);
 							os.flush();
@@ -129,7 +129,7 @@ public class ServerThread implements Runnable{
 							try {
 								for (String cname:courseName) {
 									int CID = CourseDatabase.getCourse(cname).ID;
-									StudentCourseDatabase.insert(SID, CID);
+									UserCourseDatabase.insert(SID, CID);
 								}
 							}
 							catch (IOException e) {
@@ -152,8 +152,10 @@ public class ServerThread implements Runnable{
 						}
 						try {
 							int CID = CourseDatabase.getCourse(Cname).ID;
+							
 							List<CourseInformation> courseInfoList = CourseInformationDatabase.getAllCourseInformationList(CID);
 							CourseInformationList cl = new CourseInformationList(courseInfoList);
+							System.out.println("This is size:" + cl.getSize());
 							os.writeObject(cl);
 							os.flush();
 						}
@@ -173,11 +175,11 @@ public class ServerThread implements Runnable{
 				        FileOutputStream fos = null;  
 				        String fileName = readFromClient();
 				        //服务器存储文件路径
-				        String filePath = "D:/Homework/" + fileName;
+				        String filePath = System.getProperty("user.dir") + "//Homework//" + fileName;
 				        try {  
 				            try {  
 				                dis = new DataInputStream(s2.getInputStream());  
-				                File f = new File("D:/Homework");  
+				                File f = new File(System.getProperty("user.dir") + "//Homework");  
 				                if(!f.exists()){  
 				                    f.mkdir();    
 				                }  
@@ -233,11 +235,11 @@ public class ServerThread implements Runnable{
 				        FileOutputStream fos = null;  
 				        String fileName = readFromClient();
 				        //服务器存储文件路径
-				        String filePath = "D:/CourseResource/" + fileName;
+				        String filePath = System.getProperty("user.dir") + "//CourseResource//" + fileName;
 				        try {  
 				            try {  
 				                dis = new DataInputStream(s2.getInputStream());  
-				                File f = new File("D:/CourseResource");  
+				                File f = new File(System.getProperty("user.dir") + "//CourseResource");  
 				                if(!f.exists()){  
 				                    f.mkdir();    
 				                }  
@@ -275,7 +277,7 @@ public class ServerThread implements Runnable{
 				        byte[] sendBytes = null;  
 				        DataOutputStream dos = null;  
 				        FileInputStream fis = null;
-				        File file = new File("D:/CourseResource/" + fileName);
+				        File file = new File(System.getProperty("user.dir") + "//CourseResource//" + fileName);
 				        boolean bool = false;  
 				        try {  
 				            long l = file.length();
@@ -350,7 +352,7 @@ public class ServerThread implements Runnable{
 						try {
 							Course c = new Course(0, courseName);
 							CourseDatabase.insert(c);
-							StudentCourseDatabase.insert(SID, CourseDatabase.getCourse(courseName).ID);
+							UserCourseDatabase.insert(SID, CourseDatabase.getCourse(courseName).ID);
 						}
 						catch (IOException e) {
 							e.printStackTrace();
@@ -364,7 +366,7 @@ public class ServerThread implements Runnable{
 						String courseName = readFromClient();
 						try {
 							int CID = CourseDatabase.getCourse(courseName).ID;
-							List<User> userList = StudentCourseDatabase.getCourseUserList(CID);
+							List<User> userList = UserCourseDatabase.getCourseUserList(CID);
 							groupMemberList gl = new groupMemberList(userList);
 							os.writeObject(gl);
 							os.flush();

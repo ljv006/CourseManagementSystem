@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 */
 public class chatRoomDatabase {
-	static String fileName = System.getProperty("user.dir") + "\\src\\chatRoomRecord.txt";
+	static String fileName = System.getProperty("user.dir") + "\\chatRoomRecord.txt";
 	public static int count = 0;
 	static int ID= 0;
 	static int CID = 1;
