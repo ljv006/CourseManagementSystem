@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,7 +11,6 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerThread implements Runnable{
@@ -29,23 +27,24 @@ public class ServerThread implements Runnable{
 	}
 	@SuppressWarnings("unchecked")
 	public void run() {
-		System.out.println("HH");
 		try {
 			String content = null;
 			while ((content = readFromClient()) != null) {
 				System.out.println(content);
-				System.out.println("here");
 				switch(content) {
-				case "LOGIN":
+				case Command.Login:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						is = new ObjectInputStream(s2.getInputStream());
 						try {
 							User user = (User)is.readObject();
-							if (StudentDatabase.isfind(user)) 
+							User _user = UserDatabase.getUser(user.ID);
+							if (UserDatabase.isfind(_user.name) && UserDatabase.check(user)) 
 							{
-								os.writeObject(StudentDatabase.getUser(user.ID));
+								os.writeObject(UserDatabase.getUser(user.ID));
 								ps.println(Command.LoginSuccess);							
+							} else {
+								ps.println(Command.LoginFailed);	
 							}
 						}
 						catch (ClassNotFoundException e) {
@@ -57,17 +56,18 @@ public class ServerThread implements Runnable{
 						
 					}
 					break;
-				case "REGISTER":
+				case Command.Register:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						is = new ObjectInputStream(s2.getInputStream());
 						try {
 							User user = (User)is.readObject();
-							if (!StudentDatabase.isfind(user)) {
-								StudentDatabase.insert(user);
+							if (UserDatabase.insert(user)) {
 								ps.println(Command.RegisterSuccess);
+								Thread.sleep(1000);
+								ps.println(UserDatabase.getUser(user.name).ID);
 							} else {
-								ps.println(Command.registerFailed);
+								ps.println(Command.RegisterFailed);
 							}
 						}
 						catch (ClassNotFoundException e) {
@@ -75,11 +75,13 @@ public class ServerThread implements Runnable{
 						} 
 						catch (IOException e) {
 							e.printStackTrace();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
 						} 
 						
 					}
 					break;
-				case "GETALLCOURSELIST":
+				case Command.getAllCourseList:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						ps.println(Command.getAllCourseListSuccess);
@@ -95,11 +97,11 @@ public class ServerThread implements Runnable{
 						} 
 					}
 					break;
-				case "GETUSERCOURSELIST":
+				case Command.getUserCourseList:
 					{
-						String ID = readFromClient();
+						int ID = Integer.parseInt(readFromClient());
 						PrintStream ps = new PrintStream(s.getOutputStream());
-						User usr = StudentDatabase.getUser(ID);
+						User usr = UserDatabase.getUser(ID);
 						if (usr.identity.equals("Teacher")) {
 							ps.println(Command.getUserCourseListSuccessForTeacher);
 						} else {
@@ -116,22 +118,18 @@ public class ServerThread implements Runnable{
 						} 
 					}
 					break;
-				case "REGISTERCOURSE":
+				case Command.registerCourse:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						ps.println(Command.registerCourseSuccess);
-						String SID = readFromClient();
+						int SID = Integer.parseInt(readFromClient());
 						is = new ObjectInputStream(s2.getInputStream());
 						List<String> courseName = new ArrayList<String>();
 						while ((courseName = (List<String>) is.readObject()) != null) {
 							try {
 								for (String cname:courseName) {
-									String CID = CourseDatabase.getCID(cname);
-									if (CID != null) {
-										StudentCourseDatabase.insert(SID, CID);
-									} else {
-										System.out.println("NULL");
-									}
+									int CID = CourseDatabase.getCourse(cname).ID;
+									StudentCourseDatabase.insert(SID, CID);
 								}
 							}
 							catch (IOException e) {
@@ -141,7 +139,7 @@ public class ServerThread implements Runnable{
 						
 					}
 					break;
-				case "GETCOURSEINFORMATION":
+				case Command.getCourseInformation:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						
@@ -153,7 +151,7 @@ public class ServerThread implements Runnable{
 							ps.println(Command.getCourseInformationSuccess);
 						}
 						try {
-							String CID = CourseDatabase.getCID(Cname);
+							int CID = CourseDatabase.getCourse(Cname).ID;
 							List<CourseInformation> courseInfoList = CourseInformationDatabase.getAllCourseInformationList(CID);
 							CourseInformationList cl = new CourseInformationList(courseInfoList);
 							os.writeObject(cl);
@@ -165,7 +163,7 @@ public class ServerThread implements Runnable{
 						
 					}
 					break;
-				case "UPLOADHOMEWORK":
+				case Command.uploadHomework:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						ps.println(Command.uploadHomeworkSuccess);
@@ -206,14 +204,14 @@ public class ServerThread implements Runnable{
 						
 					}
 					break;
-				case "GETCOURSERESOURCE":
+				case Command.getCourseResource:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						ps.println(Command.getCourseResourceSuccess);
 						String Cname = readFromClient();
 						try {
-							String CID = CourseDatabase.getCID(Cname);
-							CourseResourceDatabase.renew(Cname);
+							int CID = CourseDatabase.getCourse(Cname).ID;
+							CourseResourceDatabase.renew(CID);
 							List<CourseResource> courseResourceList = CourseResourceDatabase.getAllCourseResourceList(CID);
 							CourseResourceList cl = new CourseResourceList(courseResourceList);
 							os.writeObject(cl);
@@ -225,7 +223,7 @@ public class ServerThread implements Runnable{
 						
 					}
 					break;
-				case "UPLOADCOURSERESOURCE":
+				case Command.uploadCourseResource:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						ps.println(Command.uploadCourseResourceSuccess);
@@ -234,7 +232,6 @@ public class ServerThread implements Runnable{
 				        DataInputStream dis = null;  
 				        FileOutputStream fos = null;  
 				        String fileName = readFromClient();
-				        String courseName = readFromClient();
 				        //服务器存储文件路径
 				        String filePath = "D:/CourseResource/" + fileName;
 				        try {  
@@ -267,7 +264,7 @@ public class ServerThread implements Runnable{
 						
 					}
 					break;
-				case "DOWNLOADCOURSERESOURCE":
+				case Command.downloadCourseResource:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						ps.println(Command.downloadCourseResourceSuccess);
@@ -308,7 +305,7 @@ public class ServerThread implements Runnable{
 				        System.out.println(bool?"成功":"失败");
 					}
 					break;
-				case "SENDMESSAGE":
+				case Command.sendMessage:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						ps.println(Command.sendMessageSuccess);
@@ -317,11 +314,9 @@ public class ServerThread implements Runnable{
 						Chat c;
 						while ((c = (Chat) is.readObject()) != null) {
 							try {
-									String CID = CourseDatabase.getCID(courseName);
-									if (CID != null) {
-										c.CID = CID;
-										chatRoomDatabase.insert(c);
-									}
+									int CID = CourseDatabase.getCourse(courseName).ID;
+									c.CID = CID;
+									chatRoomDatabase.insert(c);
 							}
 							catch (IOException e) {
 								e.printStackTrace();
@@ -329,13 +324,13 @@ public class ServerThread implements Runnable{
 						}
 					}
 					break;
-				case "GETMESSAGE":
+				case Command.getMessage:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						ps.println(Command.getMessageSuccess);
 						String courseName = readFromClient();
 						try {
-							String CID = CourseDatabase.getCID(courseName);
+							int CID = CourseDatabase.getCourse(courseName).ID;
 							List<Chat> chatRecordList = chatRoomDatabase.getChatRecordList(CID);;
 							ChatList cl = new ChatList(chatRecordList);
 							os.writeObject(cl);
@@ -346,29 +341,29 @@ public class ServerThread implements Runnable{
 						} 
 					}
 					break;
-				case "CREATECOURSE":
+				case Command.createCourse:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						ps.println(Command.createCourseSuccess);
-						String SID = readFromClient();
+						int SID = Integer.parseInt(readFromClient());
 						String courseName = readFromClient();
 						try {
-							Course c = new Course(CourseDatabase.getID() + "", courseName);
+							Course c = new Course(0, courseName);
 							CourseDatabase.insert(c);
-							StudentCourseDatabase.insert(SID, CourseDatabase.getCID(courseName));
+							StudentCourseDatabase.insert(SID, CourseDatabase.getCourse(courseName).ID);
 						}
 						catch (IOException e) {
 							e.printStackTrace();
 						} 
 					}
 					break;
-				case "GETGROUPMEMBER":
+				case Command.getGroupMember:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						ps.println(Command.getGroupMemberSuccess);
 						String courseName = readFromClient();
 						try {
-							String CID = CourseDatabase.getCID(courseName);
+							int CID = CourseDatabase.getCourse(courseName).ID;
 							List<User> userList = StudentCourseDatabase.getCourseUserList(CID);
 							groupMemberList gl = new groupMemberList(userList);
 							os.writeObject(gl);
@@ -379,7 +374,7 @@ public class ServerThread implements Runnable{
 						} 
 					}
 					break;
-				case "SETCOURSEINFORMATION":
+				case Command.setCourseInformation:
 					{
 						PrintStream ps = new PrintStream(s.getOutputStream());
 						ps.println(Command.setCourseInformationSuccess);
@@ -387,7 +382,7 @@ public class ServerThread implements Runnable{
 						String message = readFromClient();
 						String time = readFromClient();
 						try {
-							CourseInformation ci = new CourseInformation(null, CourseDatabase.getCID(courseName), time, message);
+							CourseInformation ci = new CourseInformation(0, CourseDatabase.getCourse(courseName).ID, time, message);
 							CourseInformationDatabase.insert(ci);
 						}
 						catch (IOException e) {

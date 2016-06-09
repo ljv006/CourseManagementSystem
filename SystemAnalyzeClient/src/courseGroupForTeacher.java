@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,17 +9,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 
 public class courseGroupForTeacher extends JFrame {
-
-	private JPanel contentPane;
+	private static final long serialVersionUID = 1L;
 	public static String courseName;
 	public static groupMemberList gl;
+	public Thread t = null;
 	/**
 	 * Launch the application.
 	 */
@@ -42,7 +38,7 @@ public class courseGroupForTeacher extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				DefaultListModel model = new DefaultListModel();
+				DefaultListModel<String> model = new DefaultListModel<String>();
 				for (User c:gl.groupMemberList) {
 					System.out.println(c.name);
 					model.addElement(c.name);
@@ -55,6 +51,7 @@ public class courseGroupForTeacher extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					courseGroupForTeacher frame = new courseGroupForTeacher(courseName);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -74,12 +71,16 @@ public class courseGroupForTeacher extends JFrame {
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
 		f.getContentPane().setLayout(null);
-		
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JButton groupInformationButton = new JButton("\u7FA4\u7EC4\u4FE1\u606F");
 		groupInformationButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				try {
+					@SuppressWarnings("unused")
 					groupInformationForTeacher gi = new groupInformationForTeacher(courseName);
+					t.stop();
+					f.dispose();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -97,8 +98,12 @@ public class courseGroupForTeacher extends JFrame {
 		
 		JButton chatButton = new JButton("\u804A\u5929");
 		chatButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
+				@SuppressWarnings("unused")
 				chatRoom ch = new chatRoom(courseName);
+				t.stop();
+				f.dispose();
 			}
 		});
 		chatButton.setBounds(204, 90, 102, 41);
@@ -106,9 +111,13 @@ public class courseGroupForTeacher extends JFrame {
 		
 		JButton uploaddownloadButton = new JButton("\u4E0A\u4F20/\u4E0B\u8F7D\u8D44\u6E90");
 		uploaddownloadButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				try {
+					@SuppressWarnings("unused")
 					uploaddownload ud = new uploaddownload(_courseName);
+					t.stop();
+					f.dispose();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -126,9 +135,13 @@ public class courseGroupForTeacher extends JFrame {
 		
 		JButton goBackButton = new JButton("\u8FD4\u56DE");
 		goBackButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				try {
+					@SuppressWarnings("unused")
 					mainWindowForTeacher mw = new mainWindowForTeacher();
+					t.stop();
+					f.dispose();
 				} catch (IOException | InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -158,7 +171,8 @@ public class courseGroupForTeacher extends JFrame {
 		groupMemberLabel.setBounds(44, 6, 92, 28);
 		f.getContentPane().add(groupMemberLabel);
 		//获取课程列表
-		new Thread(new courseGroupForTeacherThread(groupMemberlist)).start();
+		t = new Thread(new courseGroupForTeacherThread(groupMemberlist));
+		t.start();
 		f.setResizable(false);
 		f.setVisible(true);
 	}

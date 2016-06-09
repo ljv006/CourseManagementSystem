@@ -1,30 +1,17 @@
 /**
  * 问题1：如何在注销后关闭历史窗口
  */
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Queue;
-
-import javax.imageio.IIOException;
 //客户端
 public class Client{
 	//主机IP
@@ -37,6 +24,7 @@ public class Client{
 	public static ObjectInputStream is = null;
 	public static ObjectOutputStream os = null;
 	public static void main(String[] args) throws IOException {
+		@SuppressWarnings("unused")
 		login lg = new login();
 	}
 	//先给服务器端发一个命令请求，在确认login命令后，那边等待接收user

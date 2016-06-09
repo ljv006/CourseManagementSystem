@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,14 +21,14 @@ public class CourseInformationDatabase {
 	public static int getID(){
 		return count++;
 	}
-	public static boolean isfind(CourseInformation courseInformation) throws IOException {
+	public static boolean isfind(String _content) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
 		@SuppressWarnings("resource")
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
 			String courseInfoInfo[] = out.split(" ");
-			if (courseInformation.content.equals(courseInfoInfo[content])) {
+			if (_content.equals(courseInfoInfo[content])) {
 				return true;
 			}
 		}
@@ -38,17 +37,16 @@ public class CourseInformationDatabase {
 		return false;
 	}
 
-	public static List<CourseInformation> getAllCourseInformationList(String _CID) throws IOException {
+	public static List<CourseInformation> getAllCourseInformationList(int _CID) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
-		@SuppressWarnings("resource")
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
 		List<CourseInformation> courseInfoList = new ArrayList<CourseInformation>();
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
 			String courseInfoInfo[] = out.split(" ");
 			if (courseInfoInfo[CID].equals(_CID)) {
-				CourseInformation courseInfo = new CourseInformation(courseInfoInfo[ID], 
-						courseInfoInfo[CID], courseInfoInfo[time], courseInfoInfo[content]);
+				CourseInformation courseInfo = new CourseInformation(Integer.parseInt(courseInfoInfo[ID]), 
+						_CID, courseInfoInfo[time], courseInfoInfo[content]);
 				courseInfoList.add(courseInfo);
 			}
 		}
@@ -57,7 +55,7 @@ public class CourseInformationDatabase {
 		return courseInfoList;
 	}
 	public static boolean insert(CourseInformation courseInformation) throws IOException {
-		if (isfind(courseInformation)) {
+		if (isfind(courseInformation.content)) {
 			return false;
 		}
 		FileWriter fileWriter = new FileWriter(fileName, true);
@@ -71,38 +69,6 @@ public class CourseInformationDatabase {
 		input += "\r\n";
 		fileWriter.write(input);
 		fileWriter.close();
-		return true;
-	}
-	public static  boolean delete(CourseInformation courseInformation) throws IOException{
-		if (!isfind(courseInformation)) {
-			return false;
-		}
-		FileWriter fileWriter = new FileWriter("temp.txt");
-		FileReader fileReader = new FileReader(fileName);
-		BufferedReader bufferedReader = new BufferedReader(fileReader);
-		String out = "";
-		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
-			String courseInfoInfo[] = out.split(" ");
-			if (!courseInformation.ID.equals(courseInfoInfo[ID])) {
-				fileWriter.write(out + "\r\n");
-			}
-		}
-		fileWriter.close();
-		bufferedReader.close();
-		
-		fileWriter = new FileWriter(fileName);
-		fileReader = new FileReader("temp.txt");
-		bufferedReader = new BufferedReader(fileReader);
-		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
-			fileWriter.write(out + "\r\n");
-		}
-		fileWriter.close();
-		fileReader.close();
-		
-		File file = new File("temp.txt");
-		if (file.exists()) {
-			file.delete();
-		}
 		return true;
 	}
 }

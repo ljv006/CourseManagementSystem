@@ -1,10 +1,7 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -12,16 +9,19 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.event.ActionEvent;
 
 public class chatRoom extends JFrame {
 
-	private JPanel contentPane;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextField contentField;
 	public static String courseName;
 	public static ChatList cl;
+	public Thread t = null;
 	/**
 	 * Launch the application.
 	 */
@@ -50,6 +50,7 @@ public class chatRoom extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					chatRoom frame = new chatRoom(courseName);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,12 +65,17 @@ public class chatRoom extends JFrame {
 	public chatRoom(String _courseName) {
 		courseName = _courseName;
 		JFrame f = new JFrame();
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setBounds(100, 100, 450, 300);
 		JButton gobackButton = new JButton("\u8FD4\u56DE");
 		gobackButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				try {
+					@SuppressWarnings("unused")
 					mainWindow newMainWindow = new mainWindow();
+					t.stop();
+					f.dispose();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {
@@ -89,7 +95,7 @@ public class chatRoom extends JFrame {
 				Long t = new Date().getTime();
 				DateFormat df2 = DateFormat.getDateTimeInstance();//可以精确到时分
 				String time = df2.format(t);
-				Chat c = new Chat(null, null, content, time, speaker);
+				Chat c = new Chat(0, 0, content, time, speaker);
 				try {
 					Client.sendMessage(courseName, c);
 				} catch (IOException e) {
@@ -132,7 +138,8 @@ public class chatRoom extends JFrame {
 		contentField.setColumns(10);
 		
 		
-		new Thread(new ChatRoomThread(chatContentList)).start();
+		t = new Thread(new ChatRoomThread(chatContentList));
+		t.start();
 		f.setResizable(false);
 		f.setVisible(true);
 	}

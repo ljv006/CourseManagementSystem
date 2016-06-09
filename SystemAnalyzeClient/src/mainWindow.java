@@ -1,34 +1,21 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListModel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class mainWindow extends JFrame {
-
-	private JPanel contentPane;
+	private static final long serialVersionUID = 1L;
 	public static CourseList cl = new CourseList();
-	/**
-	 * Launch the application.
-	 */
+	public Thread t = null;
+	
 	class mainWindowThread implements Runnable{
 		JList<String> courseList;
 		public mainWindowThread(JList<String> list) {
@@ -47,7 +34,7 @@ public class mainWindow extends JFrame {
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-				DefaultListModel model = new DefaultListModel();
+				DefaultListModel<String> model = new DefaultListModel<String>();
 				for (Course c:cl.CourseList) {
 					model.addElement(c.name);
 				}
@@ -59,6 +46,7 @@ public class mainWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					mainWindow frame = new mainWindow();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -76,14 +64,19 @@ public class mainWindow extends JFrame {
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
 		f.getContentPane().setLayout(null);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JButton logout = new JButton("注销");
 		//获取课程列表
 		
 		logout.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent arg0) {
 				JOptionPane.showMessageDialog(getContentPane(),
 						"注销成功!", "注销成功", JOptionPane.INFORMATION_MESSAGE);
+				@SuppressWarnings("unused")
 				login lg = new login();
+				t.stop();
+				f.dispose();
 			}
 		});
 		logout.setBounds(343,10,91,38);
@@ -100,15 +93,19 @@ public class mainWindow extends JFrame {
 		for (Course c:cl.CourseList) {
 			str[count++] = c.name;
 		}
-		JList courselist = new JList(str);
+		JList<String> courselist = new JList<String>(str);
 		JScrollPane ps = new JScrollPane(courselist);  
         ps.setBounds(0, 30, 180, 230);
 		f.getContentPane().add(ps);
 		JButton registerCourseButton = new JButton("\u6CE8\u518C\u8BFE\u7A0B");
 		registerCourseButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				try {
+					@SuppressWarnings("unused")
 					registCourse rc = new registCourse();
+					t.stop();
+					f.dispose();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {
@@ -122,11 +119,14 @@ public class mainWindow extends JFrame {
 		
 		JButton enterGroupButton = new JButton("\u8FDB\u5165\u7FA4\u7EC4");
 		enterGroupButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				String courseName;
 				if ((courseName = (String) courselist.getSelectedValue()) != null) {
+						@SuppressWarnings("unused")
 						courseGroup cg = new courseGroup(courseName);
-						
+						t.stop();
+						f.dispose();
 				}
 			}
 		});
@@ -141,7 +141,8 @@ public class mainWindow extends JFrame {
 		identityLabel.setText("用户权限：" + Client.usr.identity);
 		identityLabel.setBounds(190, 28, 133, 20);
 		f.getContentPane().add(identityLabel);
-		new Thread(new mainWindowThread(courselist)).start();
+		t = new Thread(new mainWindowThread(courselist));
+		t.start();
 		f.setResizable(false);
 		f.setVisible(true);
 	}

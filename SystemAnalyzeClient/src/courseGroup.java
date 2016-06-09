@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,23 +7,16 @@ import java.net.UnknownHostException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 
 public class courseGroup extends JFrame {
-
-	private JPanel contentPane;
+	private static final long serialVersionUID = 1L;
 	public static String courseName;
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					courseGroup frame = new courseGroup(courseName);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,12 +32,15 @@ public class courseGroup extends JFrame {
 		courseName = _courseName;
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.getContentPane().setLayout(null);
 		
 		JButton uploadHomeworkButton = new JButton("\u63D0\u4EA4\u4F5C\u4E1A");
 		uploadHomeworkButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				@SuppressWarnings("unused")
 				uploadHomework uh = new uploadHomework();
+				f.dispose();
 			}
 		});
 		uploadHomeworkButton.setBounds(82, 47, 102, 41);
@@ -55,7 +50,9 @@ public class courseGroup extends JFrame {
 		groupInformationButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					@SuppressWarnings("unused")
 					groupInformation gi = new groupInformation(courseName);
+					f.dispose();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -74,7 +71,9 @@ public class courseGroup extends JFrame {
 		JButton chatButton = new JButton("\u804A\u5929");
 		chatButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				@SuppressWarnings("unused")
 				chatRoom ch = new chatRoom(courseName);
+				f.dispose();
 			}
 		});
 		chatButton.setBounds(82, 133, 102, 41);
@@ -84,7 +83,9 @@ public class courseGroup extends JFrame {
 		uploaddownloadButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					@SuppressWarnings("unused")
 					uploaddownload ud = new uploaddownload(_courseName);
+					f.dispose();
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -104,7 +105,9 @@ public class courseGroup extends JFrame {
 		goBackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					@SuppressWarnings("unused")
 					mainWindow mw = new mainWindow();
+					f.dispose();
 				} catch (IOException | InterruptedException e1) {
 					e1.printStackTrace();
 				}

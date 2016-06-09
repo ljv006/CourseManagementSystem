@@ -1,29 +1,23 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class registCourse extends JFrame {
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
 	public static CourseList cl = new CourseList();
 	public static String registerCourseStatus;
+	public Thread t = null;
 	/**
 	 * Launch the application.
 	 */
@@ -46,7 +40,7 @@ public class registCourse extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				DefaultListModel model = new DefaultListModel();
+				DefaultListModel<String> model = new DefaultListModel<String>();
 				for (Course c:cl.CourseList) {
 					model.addElement(c.name);
 				}
@@ -58,6 +52,7 @@ public class registCourse extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					registCourse frame = new registCourse();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -78,12 +73,17 @@ public class registCourse extends JFrame {
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
 		f.getContentPane().setLayout(null);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JButton gobackButton = new JButton("\u8FD4\u56DE");
 		gobackButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				close();
 				try {
+					@SuppressWarnings("unused")
 					mainWindow newMainWindow = new mainWindow();
+					t.stop();
+					f.dispose();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {
@@ -102,7 +102,7 @@ public class registCourse extends JFrame {
 		cl.CourseList.clear();
 		Client.getAllCourseList();
 		Thread.sleep(500);
-		DefaultListModel model = new DefaultListModel();
+		DefaultListModel<String> model = new DefaultListModel<String>();
 		for (Course c:cl.CourseList) {
 			model.addElement(c.name);
 		}
@@ -113,6 +113,7 @@ public class registCourse extends JFrame {
 		
 		JButton registerButton = new JButton("\u6CE8\u518C");
 		registerButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				List<String> courseName;
 				if ((courseName = courselist.getSelectedValuesList()) != null) {
@@ -128,6 +129,8 @@ public class registCourse extends JFrame {
 					if (registerCourseStatus != null && registerCourseStatus.equals("REGISTERCOURSESUCCESS")) {
 						JOptionPane.showMessageDialog(getContentPane(),
 								"注册课程成功!", "注册课程成功", JOptionPane.INFORMATION_MESSAGE);
+						t.stop();
+						f.dispose();
 						break;
 					}
 					else if (registerCourseStatus != null && registerCourseStatus.equals("REGISTERCOURSEFAIL")) {
@@ -139,7 +142,8 @@ public class registCourse extends JFrame {
 		registerButton.setBounds(216, 82, 102, 41);
 		f.getContentPane().add(registerButton);
 		
-		new Thread(new registCourseThread(courselist)).start();
+		t = new Thread(new registCourseThread(courselist));
+		t.start();
 		f.setResizable(false);
 		f.setVisible(true);
 	}

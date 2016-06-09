@@ -1,29 +1,21 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class uploadHomework extends JFrame {
-
-	private JPanel contentPane;
+	private static final long serialVersionUID = 1L;
 	public static String uploadHomeworkStatus;
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					uploadHomework frame = new uploadHomework();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -38,10 +30,12 @@ public class uploadHomework extends JFrame {
 	public uploadHomework() {
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JButton gobackButton = new JButton("\u8FD4\u56DE");
 		gobackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					@SuppressWarnings("unused")
 					mainWindow newMainWindow = new mainWindow();
 				} catch (IOException e1) {
 					e1.printStackTrace();

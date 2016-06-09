@@ -5,11 +5,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ClientThread implements Runnable{
-	private Socket s;
+	@SuppressWarnings("unused")
+	private Socket s = null;
 	BufferedReader br = null;
 	ObjectInputStream is = null;
 	private Socket s2;
@@ -27,24 +27,30 @@ public class ClientThread implements Runnable{
 			while ((content = br.readLine()) != null) {
 				System.out.println(content);
 				switch(content) {
-				case "LOGINSUCCESS":
+				case Command.LoginSuccess:
 					{
 						User usr = (User)is.readObject();
 						Client.usr = usr;
-						login.loginStatus = "LOGINSUCCESS";
+						login.loginStatus = Command.LoginSuccess;
+						return;
 					}
-					break;
-				case "REGISTERSUCCESS":
+				case Command.LoginFailed:
 					{
-						register.registerStatus = "REGISTERSUCCESS";
+						login.loginStatus = Command.LoginFailed;
+						return;
 					}
-					break;
-				case "REGISTERFAILED":
+				case Command.RegisterSuccess:
 					{
-						register.registerStatus = "REGISTERFAILED";
+						register.userID = br.readLine();
+						register.registerStatus = Command.RegisterSuccess;
+						return;
 					}
-					break;
-				case "GETALLCOURSELISTSUCCESS":
+				case Command.RegisterFailed:
+					{
+						register.registerStatus = Command.RegisterFailed;
+						return;
+					}
+				case Command.getAllCourseListSuccess:
 					{
 						//用原来的socket
 						CourseList cl = new CourseList();
@@ -52,9 +58,9 @@ public class ClientThread implements Runnable{
 						while ((cl = (CourseList)is.readObject()) != null) {
 							registCourse.cl = cl;
 						}
+						return;
 					}
-					break;
-				case "GETUSERCOURSELISTSUCCESS":
+				case Command.getUserCourseListSuccess:
 					{
 						//用原来的socket
 						CourseList cl = new CourseList();
@@ -64,61 +70,61 @@ public class ClientThread implements Runnable{
 								System.out.println(c.name);
 							mainWindow.cl = cl;
 						}
+						return;
 					}
-					break;
-				case "GETUSERCOURSELISTSUCCESSFORTEACHER":
-				{
-					//用原来的socket
-					CourseList cl = new CourseList();
-					//有问题
-					while ((cl = (CourseList)is.readObject()) != null) {
-						mainWindowForTeacher.cl = cl;
-					}
-				}
-				break;
-				case "REGISTERCOURSESUCCESS":
+				case Command.getUserCourseListSuccessForTeacher:
 					{
-						registCourse.registerCourseStatus = "REGISTERCOURSESUCCESS";
+						//用原来的socket
+						CourseList cl = new CourseList();
+						//有问题
+						while ((cl = (CourseList)is.readObject()) != null) {
+							mainWindowForTeacher.cl = cl;
+						}
+						return;
 					}
-					break;
-				case "GETCOURSEINFORMATIONSUCCESS":
+				case Command.registerCourseSuccess:
+					{
+						registCourse.registerCourseStatus = Command.registerCourseSuccess;
+						return;
+					}
+				case Command.getCourseInformationSuccess:
 					{
 						CourseInformationList cl = new CourseInformationList();
 						//有问题
 						while ((cl = (CourseInformationList)is.readObject()) != null) {
 							groupInformation.cl = cl;
 						}
+						return;
 					}
-					break;
-				case "GETCOURSEINFORMATIONSUCCESSFORTEACHER":
+				case Command.getCourseInformationSuccessForTeacher:
 					{
 						CourseInformationList cl = new CourseInformationList();
 						//有问题
 						while ((cl = (CourseInformationList)is.readObject()) != null) {
 							groupInformationForTeacher.cl = cl;
 						}
+						return;
 					}
-					break;
-				case "UPLOADHOMEWORKSUCCESS":
+				case Command.uploadHomeworkSuccess:
 					{
-						uploadHomework.uploadHomeworkStatus = "UPLOADHOMEWORKSUCCESS";
+						uploadHomework.uploadHomeworkStatus = Command.uploadHomeworkSuccess;
+						return;
 					}
-					break;
-				case "GETCOURSERESOURCESUCCESS":
+				case Command.getCourseResourceSuccess:
 					{
 						CourseResourceList cl = new CourseResourceList();
 						//有问题
 						while ((cl = (CourseResourceList)is.readObject()) != null) {
 							uploaddownload.cl = cl;
 						}
+						return;
 					}
-					break;
-				case "UPLOADCOURSERESOURCESUCCESS":
+				case Command.uploadCourseResourceSuccess:
 					{
-						uploaddownload.uploadCourseResourceStatus = "UPLOADCOURSERESOURCESUCCESS";
+						uploaddownload.uploadCourseResourceStatus = Command.uploadCourseResourceSuccess;
+						return;
 					}
-					break;
-				case "DOWNLOADCOURSERESOURCESUCCESS":
+				case Command.downloadCourseResourceSuccess:
 					{
 						byte[] inputByte = null;  
 				        int length = 0;  
@@ -154,37 +160,37 @@ public class ClientThread implements Runnable{
 				        } catch (Exception e) {  
 				            e.printStackTrace();  
 				        }
-						uploaddownload.downloadCourseResourceStatus = "DOWNLOADCOURSERESOURCESUCCESS";
+						uploaddownload.downloadCourseResourceStatus = Command.downloadCourseResourceSuccess;
+						return;
 					}
-					break;
-				case "GETMESSAGESUCCESS":
+				case Command.getMessageSuccess:
 					{
 						ChatList cl = new ChatList();
 						//有问题
 						while ((cl = (ChatList)is.readObject()) != null) {
 							chatRoom.cl = cl;
 						}
+						return;
 					}
-					break;
-				case "CREATECOURSESUCCESS":
+				case Command.createCourseSuccess:
 					{
-						createCourse.createCourseStatus = "CREATECOURSESUCCESS";
+						createCourse.createCourseStatus = Command.createCourseSuccess;
+						return;
 					}
-					break;
-				case "GETGROUPMEMBERSUCCESS":
+				case Command.getGroupMemberSuccess:
 					{
 						groupMemberList gl = new groupMemberList();
 						//有问题
 						while ((gl = (groupMemberList)is.readObject()) != null) {
 							courseGroupForTeacher.gl = gl;
 						}
+						return;
 					}
-					break;
-				case "SETCOURSEINFORMATIONSUCCESS":
+				case Command.setCourseInformationSuccess:
 					{
-						groupInformationForTeacher.groupInformationStatus = "SETCOURSEINFORMATIONSUCCESS";
+						groupInformationForTeacher.groupInformationStatus = Command.setCourseInformationSuccess;
+						return;
 					}
-					break;
 				}
 			}
 		}

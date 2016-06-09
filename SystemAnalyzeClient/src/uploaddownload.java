@@ -1,10 +1,7 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,13 +18,13 @@ import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
 
 public class uploaddownload extends JFrame {
-
-	private JPanel contentPane;
+	private static final long serialVersionUID = 1L;
 	private JTable courseResourceTable;
 	public static CourseResourceList cl = new CourseResourceList();
 	public static String courseName;
 	public static String uploadCourseResourceStatus;
 	public static String downloadCourseResourceStatus;
+	public Thread t = null;
 	/**
 	 * Launch the application.
 	 */
@@ -71,6 +68,7 @@ public class uploaddownload extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					uploaddownload frame = new uploaddownload(courseName);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -90,11 +88,16 @@ public class uploaddownload extends JFrame {
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
 		f.getContentPane().setLayout(null);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JButton gobackButton = new JButton("\u8FD4\u56DE");
 		gobackButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				try {
+					@SuppressWarnings("unused")
 					mainWindow newMainWindow = new mainWindow();
+					t.stop();
+					f.dispose();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {
@@ -188,7 +191,8 @@ public class uploaddownload extends JFrame {
 		courseResource.setHorizontalAlignment(SwingConstants.CENTER);
 		courseResource.setBounds(10, 10, 177, 27);
 		f.getContentPane().add(courseResource);
-		new Thread(new uploaddownloadThread(courseResourceTable)).start();
+		t = new Thread(new uploaddownloadThread(courseResourceTable));
+		t.start();
 		f.setResizable(false);
 		f.setVisible(true);
 	}

@@ -1,28 +1,18 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
-
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 public class createCourse extends JFrame {
-
-	private JPanel contentPane;
+	private static final long serialVersionUID = 1L;
 	public static String createCourseStatus;
 	private JTextField courseName;
 	/**
@@ -32,6 +22,7 @@ public class createCourse extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					createCourse frame = new createCourse();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -52,11 +43,13 @@ public class createCourse extends JFrame {
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
 		f.getContentPane().setLayout(null);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JButton gobackButton = new JButton("\u8FD4\u56DE");
 		gobackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				close();
 				try {
+					@SuppressWarnings("unused")
 					mainWindow newMainWindow = new mainWindow();
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -94,7 +87,9 @@ public class createCourse extends JFrame {
 						JOptionPane.showMessageDialog(getContentPane(),
 								"创建课程成功!", "创建课程成功", JOptionPane.INFORMATION_MESSAGE);
 						try {
+							@SuppressWarnings("unused")
 							mainWindowForTeacher mw = new mainWindowForTeacher();
+							f.dispose();
 						} catch (IOException | InterruptedException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();

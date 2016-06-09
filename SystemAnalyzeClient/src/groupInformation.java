@@ -1,31 +1,23 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
-import javax.swing.JList;
-
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.awt.event.ActionEvent;
 
 public class groupInformation extends JFrame {
-
-	private JPanel contentPane;
+	private static final long serialVersionUID = 1L;
 	private JTable courseInfoTable;
 	public static String courseName;
 	public static CourseInformationList cl = new CourseInformationList();
+	public Thread t = null;
 	/**
 	 * Launch the application.
 	 */
@@ -69,6 +61,7 @@ public class groupInformation extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					groupInformation frame = new groupInformation(courseName);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -87,11 +80,16 @@ public class groupInformation extends JFrame {
 		courseName = _courseName;
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JButton gobackButton = new JButton("\u8FD4\u56DE");
 		gobackButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				try {
+					@SuppressWarnings("unused")
 					mainWindow newMainWindow = new mainWindow();
+					t.stop();
+					f.dispose();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {
@@ -128,7 +126,8 @@ public class groupInformation extends JFrame {
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(10, 10, 295, 27);
 		f.getContentPane().add(lblNewLabel);
-		new Thread(new groupInformationThread(courseInfoTable)).start();
+		t = new Thread(new groupInformationThread(courseInfoTable));
+		t.start();
 		f.setResizable(false);
 		f.setVisible(true);
 	}

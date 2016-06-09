@@ -1,24 +1,17 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 import javax.swing.JTextPane;
 
 public class login extends JFrame {
-
-	private JPanel contentPane;
+	private static final long serialVersionUID = 1L;
 	public static String loginStatus;
 	/**
 	 * Launch the application.
@@ -27,6 +20,7 @@ public class login extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					login frame = new login();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -35,9 +29,6 @@ public class login extends JFrame {
 		});
 	}
 
-	private void close() {
-		dispose();
-    }
 	/**
 	 * Create the frame.
 	 */
@@ -45,7 +36,7 @@ public class login extends JFrame {
 		JFrame f = new JFrame();
 		f.setBounds(100, 100, 450, 300);
 		f.getContentPane().setLayout(null);
-		
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JLabel lblNewLabel_1 = new JLabel("Login");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setBounds(175, 10, 84, 45);
@@ -66,31 +57,41 @@ public class login extends JFrame {
 		IDtext.setBounds(168, 75, 95, 25);
 		f.getContentPane().add(IDtext);
 		
-		JTextPane Passwordtext = new JTextPane();
+		JPasswordField Passwordtext=new JPasswordField();
+		Passwordtext.setEchoChar('*');
 		Passwordtext.setBounds(168, 115, 95, 25);
 		f.getContentPane().add(Passwordtext);
 		
 		JButton okButton = new JButton("OK");
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				User user = new User(IDtext.getText(), null, Passwordtext.getText(), null);
+				@SuppressWarnings("deprecation")
+				User user = new User(Integer.parseInt(IDtext.getText()), null, Passwordtext.getText(), null);
 				try {
 					Client.login(user);
 					while (true) {
 						System.out.println("loginStatus");
-						if (loginStatus != null && loginStatus.equals("LOGINSUCCESS")) {
+						if (loginStatus != null && loginStatus.equals(Command.LoginSuccess)) {
 							JOptionPane.showMessageDialog(getContentPane(),
 									"µÇÂ¼³É¹¦!", "µÇÂ¼³É¹¦", JOptionPane.INFORMATION_MESSAGE);
 							if (Client.usr.identity.equals("Teacher")) {
+								@SuppressWarnings("unused")
 								mainWindowForTeacher mw = new mainWindowForTeacher();
+								f.dispose();
 								break;
 							} else {
+								@SuppressWarnings("unused")
 								mainWindow mw = new mainWindow();
+								f.dispose();
 								break;
 							}
 						}
-						else if (loginStatus != null && loginStatus.equals("LOGINFAILED")) {
-							
+						else if (loginStatus != null && loginStatus.equals(Command.LoginFailed)) {
+								JOptionPane.showMessageDialog(getContentPane(),
+										"ÇëÖØÐÂµÇÂ¼!", "µÇÂ¼Ê§°Ü", JOptionPane.INFORMATION_MESSAGE);
+								IDtext.setText("");
+								Passwordtext.setText("");
+								break;
 						}
 					}
 					
@@ -108,7 +109,7 @@ public class login extends JFrame {
 		JButton registerButton = new JButton("Register");
 		registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				close();
+				@SuppressWarnings("unused")
 				register RegisterWindow = new register();
 			}
 		});

@@ -1,37 +1,29 @@
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.Timer;
 import java.awt.event.ActionEvent;
 
 public class groupInformationForTeacher extends JFrame {
-
-	private JPanel contentPane;
+	private static final long serialVersionUID = 1L;
 	private JTable courseInfoTable;
 	private JTextField courseInfo;
 	public static String courseName;
 	public static CourseInformationList cl = new CourseInformationList();
 	public static String groupInformationStatus;
+	public Thread t = null;
 	/**
 	 * Launch the application.
 	 */
@@ -74,6 +66,7 @@ public class groupInformationForTeacher extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					@SuppressWarnings("unused")
 					groupInformationForTeacher frame = new groupInformationForTeacher(courseName);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -91,12 +84,17 @@ public class groupInformationForTeacher extends JFrame {
 	public groupInformationForTeacher(String _courseName) throws InterruptedException, UnknownHostException, IOException {
 		courseName = _courseName;
 		JFrame f = new JFrame();
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setBounds(100, 100, 450, 300);
 		JButton gobackButton = new JButton("\u8FD4\u56DE");
 		gobackButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				try {
+					@SuppressWarnings("unused")
 					mainWindowForTeacher newMainWindow = new mainWindowForTeacher();
+					t.stop();
+					f.dispose();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (InterruptedException e1) {
@@ -167,7 +165,8 @@ public class groupInformationForTeacher extends JFrame {
 		courseInfo.setBounds(198, 44, 111, 35);
 		f.getContentPane().add(courseInfo);
 		courseInfo.setColumns(10);
-		new Thread(new groupInformationThread(courseInfoTable)).start();
+		t = new Thread(new groupInformationThread(courseInfoTable));
+		t.start();
 		f.setResizable(false);
 		f.setVisible(true);
 	}

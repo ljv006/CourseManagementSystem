@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,18 +13,35 @@ import java.sql.Statement;
 */
 public class StudentCourseDatabase {
 	static String fileName = System.getProperty("user.dir") + "\\src\\StudentCourseList.txt";
-	static int SID = 0;
-	static int Sname = 1;
-	static int CID = 2;
-	static int Cname = 3;
-	public static boolean isfind(String _Sname, String _Cname) throws IOException {
+	static int ID = 0;
+	static int SID = 1;
+	static int Sname = 2;
+	static int CID = 3;
+	static int Cname = 4;
+	public static int getID() throws NumberFormatException, IOException {
+		FileReader fileReader = new FileReader(fileName);
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String out = "";
+		int maxID = 0;
+		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
+			String studentcourseInfo[] = out.split(" ");
+			if (Integer.parseInt(studentcourseInfo[ID]) > maxID) {
+				maxID = Integer.parseInt(studentcourseInfo[ID]);
+			}
+		}
+		maxID = maxID + 1;
+		bufferedReader.close();
+		fileReader.close();
+		return maxID;
+	}
+	public static boolean isfind(int _SID, int _CID) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
 		@SuppressWarnings("resource")
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
 			String studentcourseInfo[] = out.split(" ");
-			if (_Sname.equals(studentcourseInfo[Sname]) && _Cname.equals(studentcourseInfo[Cname])) {
+			if (_SID == Integer.parseInt(studentcourseInfo[SID]) && _CID == Integer.parseInt(studentcourseInfo[CID])) {
 				return true;
 			}
 		}
@@ -33,18 +49,15 @@ public class StudentCourseDatabase {
 		fileReader.close();
 		return false;
 	}
-	public static List<Course> getUserCourseList(String _SID) throws IOException {
+	public static List<Course> getUserCourseList(int _SID) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
-		@SuppressWarnings("resource")
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
 		List<Course> courseList = new ArrayList<Course>();
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
 			String studentcourseInfo[] = out.split(" ");
-			if (studentcourseInfo[SID].equals(_SID)){
-				Course c = new Course(null, null);
-				c.ID = studentcourseInfo[CID];
-				c.name = studentcourseInfo[Cname];
+			if (Integer.parseInt(studentcourseInfo[SID]) == _SID){
+				Course c = new Course(Integer.parseInt(studentcourseInfo[CID]), studentcourseInfo[Cname]);
 				courseList.add(c);
 			}
 		}
@@ -52,70 +65,39 @@ public class StudentCourseDatabase {
 		fileReader.close();
 		return courseList;
 	}
-	public static List<User> getCourseUserList(String _CID) throws IOException {
+	public static List<User> getCourseUserList(int _CID) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
-		@SuppressWarnings("resource")
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
 		List<User> userList = new ArrayList<User>();
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
 			String studentcourseInfo[] = out.split(" ");
-			if (studentcourseInfo[CID].equals(_CID)){
-				User c = new User(null, studentcourseInfo[Sname], null, null);
-				userList.add(c);
+			if (Integer.parseInt(studentcourseInfo[CID]) == _CID){
+				User s = UserDatabase.getUser(Integer.parseInt(studentcourseInfo[SID]));
+				userList.add(s);
 			}
 		}
 		bufferedReader.close();
 		fileReader.close();
 		return userList;
 	}
-	public static boolean insert(String SID, String CID) throws IOException {
-		if (StudentCourseDatabase.isfind(SID, CID)) {
+	public static boolean insert(int _SID, int _CID) throws IOException {
+		if (StudentCourseDatabase.isfind(_SID, _CID)) {
 			return false;
 		}
 		FileWriter fileWriter = new FileWriter(fileName, true);
-		String input = SID;
+		String input = getID() + "";
 		input += " ";
-		input += StudentDatabase.getSname(SID);
+		input += SID;
+		input += " ";
+		input += UserDatabase.getUser(_SID).name;
 		input += " ";
 		input += CID;
 		input += " ";
-		input += CourseDatabase.getCname(CID);
+		input += CourseDatabase.getCourse(_CID).name;
 		input += "\r\n";
 		fileWriter.write(input);
 		fileWriter.close();
-		return true;
-	}
-	public static  boolean delete(StudentCourse studentcourse) throws IOException{
-		if (!isfind(studentcourse.SID, studentcourse.CID)) {
-			return false;
-		}
-		FileWriter fileWriter = new FileWriter("temp.txt");
-		FileReader fileReader = new FileReader(fileName);
-		BufferedReader bufferedReader = new BufferedReader(fileReader);
-		String out = "";
-		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
-			String studentcourseInfo[] = out.split(" ");
-			if (!studentcourse.CID.equals(studentcourseInfo[CID])) {
-				fileWriter.write(out + "\r\n");
-			}
-		}
-		fileWriter.close();
-		bufferedReader.close();
-		
-		fileWriter = new FileWriter(fileName);
-		fileReader = new FileReader("temp.txt");
-		bufferedReader = new BufferedReader(fileReader);
-		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
-			fileWriter.write(out + "\r\n");
-		}
-		fileWriter.close();
-		fileReader.close();
-		
-		File file = new File("temp.txt");
-		if (file.exists()) {
-			file.delete();
-		}
 		return true;
 	}
 }

@@ -1,9 +1,7 @@
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 /*
@@ -21,17 +19,30 @@ public class chatRoomDatabase {
 	static int content = 2;
 	static int time = 3;
 	static int speaker = 4;
-	public static int getID() {
-		return count++;
+	public static int getID() throws IOException {
+		FileReader fileReader = new FileReader(fileName);
+		BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String out = "";
+		int maxID = 0;
+		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
+			String studentInfo[] = out.split(" ");
+			if (Integer.parseInt(studentInfo[ID]) > maxID) {
+				maxID = Integer.parseInt(studentInfo[ID]);
+			}
+		}
+		maxID = maxID + 1;
+		bufferedReader.close();
+		fileReader.close();
+		return maxID;
 	}
-	public static boolean isfind(Chat c) throws IOException {
+	public static boolean isfind(String _content) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
 		@SuppressWarnings("resource")
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
 			String chatInfo[] = out.split("  ");
-			if (c.content.equals(chatInfo[content])) {
+			if (_content.equals(chatInfo[content])) {
 				return true;
 			}
 		}
@@ -39,17 +50,16 @@ public class chatRoomDatabase {
 		fileReader.close();
 		return false;
 	}
-	public static List<Chat> getChatRecordList(String _CID) throws IOException {
+	public static List<Chat> getChatRecordList(int _CID) throws IOException {
 		FileReader fileReader = new FileReader(fileName);
-		@SuppressWarnings("resource")
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String out = "";
 		List<Chat> chatRecordList = new ArrayList<Chat>();
 		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
 			String chatInfo[] = out.split("  ");
-			if (chatInfo[CID].equals(_CID)) {
-				Chat c = new Chat(chatInfo[ID], 
-						chatInfo[CID], chatInfo[content], chatInfo[time], chatInfo[speaker]);
+			if (Integer.parseInt(chatInfo[CID]) == _CID) {
+				Chat c = new Chat(Integer.parseInt(chatInfo[ID]), 
+						_CID, chatInfo[content], chatInfo[time], chatInfo[speaker]);
 				chatRecordList.add(c);
 			}
 		}
@@ -58,7 +68,7 @@ public class chatRoomDatabase {
 		return chatRecordList;
 	}
 	public static boolean insert(Chat c) throws IOException {
-		if (isfind(c)) {
+		if (isfind(c.content)) {
 			return false;
 		}
 		FileWriter fileWriter = new FileWriter(fileName, true);
@@ -74,39 +84,6 @@ public class chatRoomDatabase {
 		input += "\r\n";
 		fileWriter.write(input);
 		fileWriter.close();
-		return true;
-	}
-	
-	public static  boolean delete(Chat c) throws IOException{
-		if (!isfind(c)) {
-			return false;
-		}
-		FileWriter fileWriter = new FileWriter("temp.txt");
-		FileReader fileReader = new FileReader(fileName);
-		BufferedReader bufferedReader = new BufferedReader(fileReader);
-		String out = "";
-		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
-			String courseResourceInfo[] = out.split("  ");
-			if (!c.content.equals(courseResourceInfo[content])) {
-				fileWriter.write(out + "\r\n");
-			}
-		}
-		fileWriter.close();
-		bufferedReader.close();
-		
-		fileWriter = new FileWriter(fileName);
-		fileReader = new FileReader("temp.txt");
-		bufferedReader = new BufferedReader(fileReader);
-		for (out = bufferedReader.readLine(); out != null; out = bufferedReader.readLine()) {
-			fileWriter.write(out + "\r\n");
-		}
-		fileWriter.close();
-		fileReader.close();
-		
-		File file = new File("temp.txt");
-		if (file.exists()) {
-			file.delete();
-		}
 		return true;
 	}
 }
